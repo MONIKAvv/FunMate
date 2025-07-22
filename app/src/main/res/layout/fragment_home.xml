@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_screen"
+    tools:context=".fragment.HomeFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <ImageView
+                android:id="@+id/check_in"
+                android:layout_width="171dp"
+                android:layout_height="203dp"
+                android:clickable="true"
+                android:layout_marginTop="16dp"
+                android:focusable="true"
+                app:layout_constraintEnd_toStartOf="@+id/vig_small"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/checkinnnnnnnn" />
+
+            <ImageView
+                android:id="@+id/vig_small"
+                android:layout_width="171dp"
+                android:layout_height="203dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="@+id/check_in"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/check_in"
+                app:srcCompat="@drawable/vigmall" />
+
+            <ImageView
+                android:id="@+id/sound"
+                android:layout_width="171dp"
+                android:layout_height="203dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toStartOf="@+id/math_fun"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/check_in"
+                app:srcCompat="@drawable/sound" />
+
+            <ImageView
+                android:id="@+id/math_fun"
+                android:layout_width="171dp"
+                android:layout_height="203dp"
+                app:layout_constraintBottom_toBottomOf="@+id/sound"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/sound"
+                app:srcCompat="@drawable/math" />
+
+            <ImageView
+                android:id="@+id/alphabet"
+                android:layout_width="171dp"
+                android:layout_height="203dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toStartOf="@+id/games"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sound"
+                app:srcCompat="@drawable/alphabet" />
+
+            <ImageView
+                android:id="@+id/games"
+                android:layout_width="171dp"
+                android:layout_height="203dp"
+                app:layout_constraintBottom_toBottomOf="@+id/alphabet"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/alphabet"
+                app:srcCompat="@drawable/gamessss" />
+
+            <ImageView
+                android:id="@+id/invite"
+                android:layout_width="171dp"
+                android:layout_height="203dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toStartOf="@+id/promo"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/alphabet"
+                app:srcCompat="@drawable/invite" />
+
+            <ImageView
+                android:id="@+id/promo"
+                android:layout_width="171dp"
+                android:layout_height="203dp"
+                app:layout_constraintBottom_toBottomOf="@+id/invite"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/invite"
+                app:srcCompat="@drawable/promoooo" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

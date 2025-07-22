@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:icon="@drawable/home"
+        android:title="Home"/>
+
+    <item
+        android:icon="@drawable/home"
+        android:title="How it works"/>
+    <item
+        android:icon="@drawable/home"
+        android:title="Redeem"/>
+    <item
+        android:icon="@drawable/home"
+        android:title="Hostory"/>
+    <item
+        android:icon="@drawable/home"
+        android:title="Telegram"/>
+    <item
+        android:icon="@drawable/home"
+        android:title="Rate us"/>
+    <item
+        android:icon="@drawable/home"
+        android:title="Share us"/>
+    <item
+        android:icon="@drawable/home"
+        android:title="Email"/>
+    <item
+        android:icon="@drawable/home"
+        android:title="Delete account"/>
+    <item
+        android:icon="@drawable/home"
+        android:title="Logout"/>
+
+</menu>

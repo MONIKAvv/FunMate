@@ -1,5 +1,6 @@
 package vv.monika.funmate
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import androidx.activity.enableEdgeToEdge
@@ -20,6 +21,10 @@ class LoginActivity : AppCompatActivity() {
             "<font color='#888888'>I agree to the </font><b><font color='#FFFFFF'>Privacy Policy </font></b><font color='#888888'>and </font><b><font color='#FFFFFF'>Terms of Services</font></b>"
 
         )
+        binding.continueButton.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
 
     }
 }
