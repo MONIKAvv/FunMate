@@ -9,9 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.ScaleAnimation
 import android.widget.Toast
+import vv.monika.funmate.AlphabetFunActivity
+import vv.monika.funmate.BigvsSmallActivity
+import vv.monika.funmate.CheckInActivity
+import vv.monika.funmate.GameActivity
 import vv.monika.funmate.InviteActivity
+import vv.monika.funmate.MatchFunActivity
 import vv.monika.funmate.PromoActivity
 import vv.monika.funmate.R
+import vv.monika.funmate.SoundMatchActivity
 import vv.monika.funmate.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -31,27 +37,27 @@ class HomeFragment : Fragment() {
 
         binding.checkIn.setOnClickListener {
             it.startAnimation(createScaleAnimation())
-            Toast.makeText(requireContext(), "check in toast", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(requireContext(), CheckInActivity::class.java))
         }
         binding.vigSmall.setOnClickListener {
             it.startAnimation(createScaleAnimation())
-            Toast.makeText(requireContext(), "Vig Small toast", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(requireContext(), BigvsSmallActivity::class.java))
         }
         binding.sound.setOnClickListener {
             it.startAnimation(createScaleAnimation())
-            Toast.makeText(requireContext(), "sound toast", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(requireContext(), SoundMatchActivity::class.java))
         }
         binding.mathFun.setOnClickListener {
             it.startAnimation(createScaleAnimation())
-            Toast.makeText(requireContext(), "mathfun toast", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(requireContext(), MatchFunActivity::class.java))
         }
         binding.alphabet.setOnClickListener {
             it.startAnimation(createScaleAnimation())
-            Toast.makeText(requireContext(), "Alphabet toast", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(requireContext(), AlphabetFunActivity::class.java))
         }
         binding.games.setOnClickListener {
             it.startAnimation(createScaleAnimation())
-            Toast.makeText(requireContext(), "Games toast", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(requireContext(), GameActivity::class.java))
         }
         binding.invite.setOnClickListener {
             it.startAnimation(createScaleAnimation())

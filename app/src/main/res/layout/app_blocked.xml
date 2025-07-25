@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/update_bgg" />
+        android:src="@drawable/oops" />
 
     <TextView
         android:id="@+id/textView8"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
         android:fontFamily="@font/poppins_semibold"
-        android:text="Update Required"
+        android:text="Oops!"
         android:textColor="@color/white"
         android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="@+id/imageView10"
@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="-20dp"
-        android:text="Please update our app for an improved \n experience, this version is no longer \n suported. "
+        android:text="The app is temporarily closed, We appreciate \n your patience and look forward to serving \n you again soon."
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="16sp"
@@ -50,7 +50,7 @@
         android:layout_height="63dp"
         android:background="@drawable/gray_button_shape"
         android:fontFamily="@font/poppins_semibold"
-        android:text="Update Now"
+        android:text="Close App"
         android:textAllCaps="false"
         android:paddingStart="40dp"
         android:textColor="@color/white"
@@ -70,7 +70,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/loop_icon"
+            android:src="@drawable/left_back_circle_icon"
             android:layout_gravity="center"/>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -88,7 +88,7 @@
         android:layout_marginBottom="28dp"
         android:background="@drawable/gray_button_shape"
         android:fontFamily="@font/poppins_semibold"
-        android:paddingStart="32dp"
+        android:paddingStart="40dp"
         android:text="Refer Now "
         android:textAllCaps="false"
         android:textColor="@color/white"
