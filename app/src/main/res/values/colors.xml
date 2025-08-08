@@ -9,4 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="orange">#FFB23F</color>
     <color name="gray">#363642</color>
+    <color name="yellow_text">#FFD600</color>
+    <color name="pending_text_color">#D29D43</color>
+    <color name="success_text_color">#4AD243</color>
+    <color name="failed_text_color">#F62F2F</color>
 </resources>
