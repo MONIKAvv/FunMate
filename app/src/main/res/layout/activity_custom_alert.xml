@@ -4,15 +4,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@drawable/background_screen"
+    android:background="@android:color/transparent"
         android:fitsSystemWindows="true"
     tools:context=".CustomAlert">
 
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
-            android:layout_width="710dp"
-            android:layout_height="673dp"
+            android:layout_width="336dp"
+            android:layout_height="270dp"
             app:cardCornerRadius="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -27,9 +27,9 @@
 
                 <ImageView
                     android:id="@+id/alert_icon"
-                    android:layout_width="204dp"
-                    android:layout_height="204dp"
-                    android:layout_marginTop="150dp"
+                    android:layout_width="104dp"
+                    android:layout_height="104dp"
+                    android:layout_marginTop="30dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.505"
                     app:layout_constraintStart_toStartOf="parent"
@@ -38,8 +38,8 @@
 
                 <TextView
                     android:id="@+id/alert_title"
-                    android:layout_width="211dp"
-                    android:layout_height="52dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/poppins_semibold"
                     android:text="Congratulations"
@@ -67,8 +67,8 @@
 
         <ImageView
             android:id="@+id/close_alert"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="@+id/cardView"
             app:layout_constraintStart_toStartOf="@+id/cardView"

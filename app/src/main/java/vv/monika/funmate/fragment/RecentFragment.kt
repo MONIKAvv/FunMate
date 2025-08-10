@@ -5,7 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import vv.monika.funmate.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import vv.monika.funmate.adapter.HistoryAdapter
 import vv.monika.funmate.databinding.FragmentRecentBinding
 
 
@@ -26,6 +27,14 @@ class RecentFragment : Fragment() {
         binding = FragmentRecentBinding.inflate(layoutInflater, container, false)
 
 //        dummy data
+        val withDrawStatus = listOf("Pending", "Success", "Failed")
+//        need to change color as well on success failure and pending
+        val totalCoin = listOf("1000", "20000", "300")
+        val dateTime = listOf("12/09/25-12:03", "2/09/25-11:23", "22/02/25-2:53")
+        val adapter = HistoryAdapter(withDrawStatus = withDrawStatus, totalCoin = totalCoin, dataAndTime = dateTime )
+
+        binding.historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.historyRecyclerView.adapter = adapter
 
 
 
