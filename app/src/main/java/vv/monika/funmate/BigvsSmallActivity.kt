@@ -1,20 +1,62 @@
 package vv.monika.funmate
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import vv.monika.funmate.databinding.ActivityBigvsSmallBinding
 
 class BigvsSmallActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityBigvsSmallBinding
+
+    private var isHintVisible = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_bigvs_small)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        binding = ActivityBigvsSmallBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.btnHint.setOnClickListener {
+            toggleHint()
         }
+        // Make sure hintBubble refers to the hint layout in the same screen
+        binding.hintBubble.visibility = View.GONE
+
+        binding.root.setOnClickListener {
+            binding.hintBubble.visibility = View.GONE
+            hideHint()
+            isHintVisible = !isHintVisible
+        }
+
+    }
+
+    private fun showHint() {
+        binding.btnHint.setImageResource(R.drawable.close_hint) // optional, can change icon
+        binding.hintBubble.apply {
+            visibility = View.VISIBLE
+            alpha = 0f
+            translationY = 20f
+            animate().alpha(1f).translationY(0f).setDuration(180).start()
+        }
+    }
+
+    private fun hideHint() {
+        binding.btnHint.setImageResource(R.drawable.hint_icon)
+        binding.hintBubble.animate()
+            .alpha(0f)
+            .translationY(20f)
+            .setDuration(180)
+            .withEndAction { binding.hintBubble.visibility = View.GONE }
+            .start()
+    }
+
+    private fun toggleHint() {
+        if (isHintVisible) {
+            hideHint()
+        } else {
+            showHint()
+        }
+        isHintVisible = !isHintVisible
     }
 }

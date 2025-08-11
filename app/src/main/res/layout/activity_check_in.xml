@@ -115,6 +115,7 @@
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:text="Great! You’ve collected your reward for today. come \n back again tomorrow, even more amazing rewards are \n waiting for you."
         android:textAlignment="center"
         android:textColor="@color/white"
