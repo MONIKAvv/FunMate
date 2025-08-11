@@ -52,6 +52,8 @@
         android:drawableStart="@drawable/google"
         android:fontFamily="@font/poppins_semibold"
         android:paddingStart="16dp"
+        android:paddingEnd="35dp"
+        android:textColor="@color/black"
         android:text="Google"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="@+id/button2"
@@ -88,7 +90,7 @@
     <Button
         android:id="@+id/continue_button"
         android:layout_width="353dp"
-        android:layout_height="55dp"
+        android:layout_height="60dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/orange_button_shape"
         android:fontFamily="@font/poppins_semibold"
@@ -102,25 +104,26 @@
         android:id="@+id/checkBox"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginStart="4dp"
         android:layout_marginBottom="32dp"
         android:background="@android:color/transparent"
         android:buttonTint="@color/checkbox_tint"
-        android:textAlignment="center"
+      android:gravity="center_vertical"
         android:textColor="@color/orange"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/continue_button" />
+        app:layout_constraintStart_toStartOf="@+id/button" />
 
     <TextView
         android:id="@+id/terms_and_condition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:fontFamily="@font/poppins"
         android:text="I agree to the Privacy Policy and Terms of Service "
         android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/checkBox"
         app:layout_constraintStart_toEndOf="@+id/checkBox"
-        app:layout_constraintTop_toTopOf="@+id/checkBox" />
+        app:layout_constraintTop_toTopOf="@+id/checkBox"
+        app:layout_constraintVertical_bias="0.625" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

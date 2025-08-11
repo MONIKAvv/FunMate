@@ -55,29 +55,27 @@
         android:fontFamily="@font/poppins"
         android:inputType="text"
         android:paddingStart="16dp"
-        android:text="Share/link/Ecample..."
+        android:hint="Share/link/Ecample..."
+        android:textColorHint="#B5A8FF"
         android:textColor="#B5A8FF"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-    <EditText
+    <TextView
         android:id="@+id/editTextText2"
         android:layout_width="358dp"
         android:layout_height="63dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/edit_text_shape"
-        android:ems="10"
-        android:hint="Refer Code : 2H3jg3J"
-        android:inputType="text"
+        android:text="Refer Code : 2H3jg3J"
         android:fontFamily="@font/poppins"
         android:paddingStart="16dp"
+        android:gravity="center_vertical"
         android:textColor="@color/white"
-        android:textColorHint="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/editTextText"
-        app:layout_constraintHorizontal_bias="0.436"
         app:layout_constraintStart_toStartOf="@+id/editTextText"
         app:layout_constraintTop_toBottomOf="@+id/editTextText" />
 

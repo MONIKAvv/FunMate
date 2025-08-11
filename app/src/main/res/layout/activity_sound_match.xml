@@ -135,8 +135,8 @@
         android:layout_marginTop="37dp"
         android:background="@drawable/question_white_bg"
         android:fontFamily="@font/poppins_bold"
-        android:gravity="center"
-        android:paddingStart="22dp"
+        android:gravity="center_vertical"
+        android:paddingStart="65dp"
         android:text="Cat"
         android:textColor="@color/gray"
         android:textSize="20sp"
@@ -175,8 +175,8 @@
         android:layout_height="56dp"
         android:background="@drawable/question_white_bg"
         android:fontFamily="@font/poppins_bold"
-        android:gravity="center"
-        android:paddingStart="22dp"
+        android:gravity="center_vertical"
+        android:paddingStart="65dp"
         android:text="Dog"
         android:textColor="@color/gray"
         android:textSize="20sp"
@@ -186,6 +186,7 @@
         app:layout_constraintTop_toTopOf="@+id/textView15" />
 
     <ImageView
+        android:id="@+id/imageView4"
         android:layout_width="70dp"
         android:layout_height="56dp"
         android:layout_marginStart="-10dp"
@@ -215,8 +216,8 @@
         android:layout_marginTop="40dp"
         android:background="@drawable/question_white_bg"
         android:fontFamily="@font/poppins_bold"
-        android:gravity="center"
-        android:paddingStart="22dp"
+        android:gravity="center_vertical"
+        android:paddingStart="65dp"
         android:text="Cow"
         android:textColor="@color/gray"
         android:textSize="20sp"
@@ -251,13 +252,13 @@
         android:layout_height="56dp"
         android:background="@drawable/question_white_bg"
         android:fontFamily="@font/poppins_bold"
-        android:gravity="center"
-        android:paddingStart="22dp"
+        android:gravity="center_vertical"
+        android:paddingStart="65dp"
         android:text="Sheep"
         android:textColor="@color/gray"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView20"
-        app:layout_constraintEnd_toEndOf="@+id/textView17" />
+        app:layout_constraintEnd_toEndOf="@+id/textView17"
+        app:layout_constraintTop_toTopOf="@+id/textView20" />
 
     <ImageView
         android:layout_width="70dp"

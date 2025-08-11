@@ -117,21 +117,21 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView14"
         app:srcCompat="@drawable/uupi" />
 
-    <EditText
-        android:id="@+id/editTextText4"
-        android:layout_width="358dp"
-        android:layout_height="59dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/edit_text_shape"
-        android:ems="10"
-        android:fontFamily="@font/poppins"
-        android:gravity="center"
-        android:hint="Enter Code"
-        android:inputType="text"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView15"
-        app:layout_constraintStart_toStartOf="@+id/imageView15"
-        app:layout_constraintTop_toBottomOf="@+id/imageView15" />
+<!--    <EditText-->
+<!--        android:id="@+id/editTextText4"-->
+<!--        android:layout_width="358dp"-->
+<!--        android:layout_height="59dp"-->
+<!--        android:layout_marginTop="24dp"-->
+<!--        android:background="@drawable/edit_text_shape"-->
+<!--        android:ems="10"-->
+<!--        android:fontFamily="@font/poppins"-->
+<!--        android:gravity="center"-->
+<!--        android:hint="Enter Code"-->
+<!--        android:inputType="text"-->
+<!--        android:textSize="18sp"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/imageView15"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/imageView15"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/imageView15" />-->
 
     <Button
         android:id="@+id/button6"

@@ -31,7 +31,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/checkinnnnnnnn" />
+                app:srcCompat="@drawable/checkin" />
 
             <ImageView
                 android:id="@+id/vig_small"
@@ -43,7 +43,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/check_in"
-                app:srcCompat="@drawable/vigmall" />
+                app:srcCompat="@drawable/vigsmall" />
 
             <ImageView
                 android:id="@+id/sound"
@@ -54,7 +54,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/check_in"
-                app:srcCompat="@drawable/sound" />
+                app:srcCompat="@drawable/soundd" />
 
             <ImageView
                 android:id="@+id/math_fun"
@@ -64,7 +64,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/sound"
-                app:srcCompat="@drawable/math" />
+                app:srcCompat="@drawable/maths" />
 
             <ImageView
                 android:id="@+id/alphabet"
@@ -75,7 +75,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sound"
-                app:srcCompat="@drawable/alphabet" />
+                app:srcCompat="@drawable/alphabets" />
 
             <ImageView
                 android:id="@+id/games"
@@ -85,7 +85,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/alphabet"
-                app:srcCompat="@drawable/gamessss" />
+                app:srcCompat="@drawable/game" />
 
             <ImageView
                 android:id="@+id/invite"
@@ -96,7 +96,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/alphabet"
-                app:srcCompat="@drawable/invite" />
+                app:srcCompat="@drawable/inviite" />
 
             <ImageView
                 android:id="@+id/promo"
@@ -106,7 +106,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/invite"
-                app:srcCompat="@drawable/promoooo" />
+                app:srcCompat="@drawable/promo_code" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
