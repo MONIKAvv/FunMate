@@ -91,7 +91,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <TextView
-        android:id="@+id/textView13"
+        android:id="@+id/alphabet_fun_qst"
         android:layout_width="336dp"
         android:layout_height="69dp"
         android:layout_marginTop="24dp"
@@ -111,9 +111,9 @@
         android:layout_height="69dp"
         android:layout_marginStart="-15dp"
         android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView13"
-        app:layout_constraintStart_toStartOf="@+id/textView13"
-        app:layout_constraintTop_toTopOf="@+id/textView13"
+        app:layout_constraintBottom_toBottomOf="@+id/alphabet_fun_qst"
+        app:layout_constraintStart_toStartOf="@+id/alphabet_fun_qst"
+        app:layout_constraintTop_toTopOf="@+id/alphabet_fun_qst"
         app:srcCompat="@drawable/yellow_curve_bg" />
 
     <TextView
@@ -125,211 +125,125 @@
         android:text="Q1"
         android:textColor="@color/gray"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView13"
-        app:layout_constraintStart_toStartOf="@+id/textView13"
-        app:layout_constraintTop_toTopOf="@+id/textView13" />
+        app:layout_constraintBottom_toBottomOf="@+id/alphabet_fun_qst"
+        app:layout_constraintStart_toStartOf="@+id/alphabet_fun_qst"
+        app:layout_constraintTop_toTopOf="@+id/alphabet_fun_qst" />
 
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="150dp"
+
+    <Button
+        android:id="@+id/alphabet_opt_a"
+        android:layout_width="288dp"
         android:layout_height="56dp"
-        android:layout_marginTop="37dp"
-        android:background="@drawable/question_white_bg"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/op_a"
         android:fontFamily="@font/poppins_bold"
         android:gravity="center_vertical"
         android:paddingStart="65dp"
-        android:text="b"
+        android:text="4"
+        android:textAllCaps="false"
         android:textColor="@color/gray"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/textView17"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+        app:layout_constraintStart_toStartOf="@+id/alphabet_fun_qst"
+        app:layout_constraintTop_toBottomOf="@+id/alphabet_fun_qst" />
 
-    <ImageView
-        android:id="@+id/imageView22"
-        android:layout_width="70dp"
+    <Button
+        android:id="@+id/alphabet_opt_b"
+        android:layout_width="288dp"
         android:layout_height="56dp"
-        android:layout_marginStart="-10dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView15"
-        app:layout_constraintStart_toStartOf="@+id/textView15"
-        app:layout_constraintTop_toTopOf="@+id/textView15"
-        app:srcCompat="@drawable/yellow_curve_bg" />
-
-    <TextView
-        android:id="@+id/textView16"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:fontFamily="@font/poppins_bold"
-        android:text="A"
-        android:textColor="@color/gray"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView15"
-        app:layout_constraintStart_toStartOf="@+id/textView15"
-        app:layout_constraintTop_toTopOf="@+id/textView15" />
-
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="150dp"
-        android:layout_height="56dp"
-        android:background="@drawable/question_white_bg"
+        android:background="@drawable/op_b"
         android:fontFamily="@font/poppins_bold"
         android:gravity="center_vertical"
         android:paddingStart="65dp"
         android:text="B"
+        android:textAllCaps="false"
         android:textColor="@color/gray"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/textView15"
-        app:layout_constraintTop_toTopOf="@+id/textView15" />
+        app:layout_constraintStart_toEndOf="@+id/alphabet_opt_a"
+        app:layout_constraintTop_toTopOf="@+id/alphabet_opt_a" />
 
-    <ImageView
-        android:layout_width="70dp"
+
+    <Button
+        android:id="@+id/alphabet_opt_c"
+        android:layout_width="280dp"
         android:layout_height="56dp"
-        android:layout_marginStart="-10dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView17"
-        app:layout_constraintStart_toStartOf="@+id/textView17"
-        app:layout_constraintTop_toTopOf="@+id/textView17"
-        app:srcCompat="@drawable/yellow_curve_bg" />
-
-    <TextView
-        android:id="@+id/textView18"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:fontFamily="@font/poppins_bold"
-        android:text="B"
-        android:textColor="@color/gray"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView17"
-        app:layout_constraintStart_toStartOf="@+id/textView17"
-        app:layout_constraintTop_toTopOf="@+id/textView17" />
-
-    <TextView
-        android:id="@+id/textView20"
-        android:layout_width="150dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/question_white_bg"
+        android:background="@drawable/op_c"
         android:fontFamily="@font/poppins_bold"
         android:gravity="center_vertical"
         android:paddingStart="65dp"
         android:text="a"
+        android:textAllCaps="false"
+        android:layout_marginTop="26dp"
         android:textColor="@color/gray"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/textView15"
-        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+        app:layout_constraintStart_toStartOf="@+id/alphabet_opt_a"
+        app:layout_constraintTop_toBottomOf="@+id/alphabet_opt_a" />
 
-    <ImageView
-        android:layout_width="70dp"
+
+    <Button
+        android:id="@+id/alphabet_opt_d"
+        android:layout_width="280dp"
         android:layout_height="56dp"
-        android:layout_marginStart="-10dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView20"
-        app:layout_constraintStart_toStartOf="@+id/textView20"
-        app:layout_constraintTop_toTopOf="@+id/textView20"
-        app:srcCompat="@drawable/yellow_curve_bg" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:fontFamily="@font/poppins_bold"
-        android:text="C"
-        android:textColor="@color/gray"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView20"
-        app:layout_constraintStart_toStartOf="@+id/textView20"
-        app:layout_constraintTop_toTopOf="@+id/textView20" />
-
-    <TextView
-        android:id="@+id/textView19"
-        android:layout_width="150dp"
-        android:layout_height="56dp"
-        android:background="@drawable/question_white_bg"
+        android:background="@drawable/op_d"
         android:fontFamily="@font/poppins_bold"
         android:gravity="center_vertical"
         android:paddingStart="65dp"
         android:text="d"
+        android:textAllCaps="false"
         android:textColor="@color/gray"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView20"
-        app:layout_constraintEnd_toEndOf="@+id/textView17" />
-
-    <ImageView
-        android:layout_width="70dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="-10dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView19"
-        app:layout_constraintStart_toStartOf="@+id/textView19"
-        app:layout_constraintTop_toTopOf="@+id/textView19"
-        app:srcCompat="@drawable/yellow_curve_bg" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:fontFamily="@font/poppins_bold"
-        android:text="D"
-        android:textColor="@color/gray"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView19"
-        app:layout_constraintStart_toStartOf="@+id/textView19"
-        app:layout_constraintTop_toTopOf="@+id/textView19" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/alphabet_opt_c"
+        app:layout_constraintTop_toTopOf="@+id/alphabet_opt_c" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView2"
-        android:layout_width="57dp"
-        android:layout_height="57dp"
-        android:layout_marginBottom="72dp"
-        android:background="@color/gray"
-        android:backgroundTint="@color/gray"
-        app:cardCornerRadius="38dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+            android:id="@+id/cardView2"
+            android:layout_width="57dp"
+            android:layout_height="57dp"
+            android:layout_marginBottom="72dp"
+            android:background="@color/gray"
+            android:backgroundTint="@color/gray"
+            app:cardCornerRadius="38dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
 
-        <ImageView
-            android:id="@+id/btnHint"
-            android:layout_width="35dp"
+            <ImageView
+                android:id="@+id/btnHint"
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/hint_icon" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/textView23"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:srcCompat="@drawable/hint_icon" />
-    </androidx.cardview.widget.CardView>
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/poppins"
+            android:text="Hint"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/cardView2"
+            app:layout_constraintStart_toStartOf="@+id/cardView2"
+            app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
-    <TextView
-        android:id="@+id/textView23"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/poppins"
-        android:text="Hint"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/cardView2"
-        app:layout_constraintStart_toStartOf="@+id/cardView2"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
-
-    <TextView
-        android:id="@+id/hintBubble"
-        android:layout_width="252dp"
-        android:layout_height="185dp"
-        android:background="@drawable/hint_bg"
-        android:layout_marginEnd="15dp"
-        android:paddingTop="32dp"
-        android:layout_marginBottom="-15dp"
-        android:text="If you count up from 5 \n which of the given option \n would you say next"
-        android:textAlignment="center"
-        android:textColor="#363642"
-        android:textSize="14sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/cardView2"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/hintBubble"
+            android:layout_width="252dp"
+            android:layout_height="185dp"
+            android:background="@drawable/hint_bg"
+            android:layout_marginEnd="15dp"
+            android:paddingTop="32dp"
+            android:layout_marginBottom="-15dp"
+            android:text="If you count up from 5 \n which of the given option \n would you say next"
+            android:textAlignment="center"
+            android:textColor="#363642"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/cardView2"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

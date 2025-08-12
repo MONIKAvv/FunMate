@@ -37,5 +37,6 @@ object CustomAlert {
         closeBtn.setOnClickListener {
             alertDialog.dismiss()
         }
+
     }
 }

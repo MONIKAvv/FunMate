@@ -1,5 +1,6 @@
 package vv.monika.funmate
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -12,11 +13,46 @@ class SoundMatchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySoundMatchBinding
     private var isHintVisible = false
 
+    val correctOption = "C"
+    var selectedOption : String? = null
+private var mediaPlayer: MediaPlayer? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivitySoundMatchBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.playSound.setOnClickListener {
+//            playsound with animation
+            mediaPlayer = MediaPlayer.create(this, R.raw.moo_sound)
+            mediaPlayer?.start()
+
+            binding.audioWave.visibility = View.VISIBLE
+            binding.audioWave.playAnimation()
+
+            mediaPlayer?.setOnCompletionListener {
+                binding.audioWave.pauseAnimation()
+                it.release()
+            }
+        }
+
+        binding.soundOptA.setOnClickListener {
+            selectedOption = "A"
+            checkAnswer()
+        }
+        binding.soundOptB.setOnClickListener {
+            selectedOption = "B"
+            checkAnswer()
+        }
+        binding.soundOptC.setOnClickListener {
+            selectedOption = "C"
+            checkAnswer()
+        }
+        binding.soundOptD.setOnClickListener {
+            selectedOption = "D"
+            checkAnswer()
+        }
 
         binding.hintBubble.visibility = View.GONE
 
@@ -31,6 +67,14 @@ class SoundMatchActivity : AppCompatActivity() {
             toggleHint()
         }
 
+    }
+
+    private fun checkAnswer() {
+        if (selectedOption == correctOption){
+            CustomAlert.showCustomAlert(this, AlertType.CORRECT, "Corrext Answer", "Move next")
+        }else{
+            CustomAlert.showCustomAlert(this, AlertType.WRONG, "Wrong", "Try again")
+        }
     }
 
     private fun toggleHint() {

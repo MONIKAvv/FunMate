@@ -9,6 +9,8 @@ import vv.monika.funmate.databinding.ActivityBigvsSmallBinding
 class BigvsSmallActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBigvsSmallBinding
+val correctOption = "C"
+    var selectedOption : String? = null
 
     private var isHintVisible = false
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,6 +18,23 @@ class BigvsSmallActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityBigvsSmallBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.vsOptA.setOnClickListener {
+            selectedOption = "A"
+            checkAnswer()
+        }
+        binding.vsOptB.setOnClickListener {
+            selectedOption = "B"
+            checkAnswer()
+        }
+        binding.vsOptC.setOnClickListener {
+            selectedOption = "C"
+            checkAnswer()
+        }
+        binding.vsOptD.setOnClickListener {
+            selectedOption = "D"
+            checkAnswer()
+        }
 
         binding.btnHint.setOnClickListener {
             toggleHint()
@@ -29,6 +48,14 @@ class BigvsSmallActivity : AppCompatActivity() {
             isHintVisible = !isHintVisible
         }
 
+    }
+
+    private fun checkAnswer() {
+        if (selectedOption == correctOption){
+            CustomAlert.showCustomAlert(this, AlertType.CORRECT, "Good", "Move to next")
+        }else{
+            CustomAlert.showCustomAlert(this, AlertType.WRONG, "Oops Wrong", "Please once more")
+        }
     }
 
     private fun showHint() {

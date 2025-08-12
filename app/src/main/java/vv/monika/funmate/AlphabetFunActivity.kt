@@ -1,7 +1,9 @@
 package vv.monika.funmate
 
+import android.R.attr.button
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toDrawable
@@ -14,17 +16,47 @@ class AlphabetFunActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAlphabetFunBinding
     private var isHintVisible = false
 
+    val correctOption = "C"
+    var selectedOption: String? = null // store user choice
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityAlphabetFunBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+//        swtitch case for question matching
+
+
+
+        binding.alphabetOptA.setOnClickListener {
+            selectedOption = "A"
+            checkAnswer()
+        }
+
+        binding.alphabetOptB.setOnClickListener {
+            selectedOption = "B"
+            checkAnswer()
+        }
+
+        binding.alphabetOptC.setOnClickListener {
+            selectedOption = "C"
+            checkAnswer()
+        }
+
+        binding.alphabetOptD.setOnClickListener {
+            selectedOption = "D"
+            checkAnswer()
+        }
+
+
+
         binding.btnHint.setOnClickListener {
             toggleHint()
 
         }
-binding.hintBubble.visibility = View.GONE
+        binding.hintBubble.visibility = View.GONE
 
         binding.root.setOnClickListener {
             binding.hintBubble.visibility = View.GONE
@@ -32,12 +64,22 @@ binding.hintBubble.visibility = View.GONE
             isHintVisible = !isHintVisible
         }
 
+
     }
 
+    private fun checkAnswer() {
+        if (selectedOption == correctOption) {
+            CustomAlert.showCustomAlert(this,AlertType.CORRECT, "Correct Answer", "You did Great")
+        } else {
+            CustomAlert.showCustomAlert(this,AlertType.WRONG, "Wrong Answer", "Oops! Please try again")
+        }
+    }
+
+
     private fun toggleHint() {
-        if (isHintVisible){
+        if (isHintVisible) {
             hideHint()
-        }else{
+        } else {
             showHint()
         }
         isHintVisible = !isHintVisible
