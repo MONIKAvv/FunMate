@@ -14,14 +14,17 @@ class SoundMatchActivity : AppCompatActivity() {
     private var isHintVisible = false
 
     val correctOption = "C"
-    var selectedOption : String? = null
-private var mediaPlayer: MediaPlayer? = null
+    var selectedOption: String? = null
+    private var mediaPlayer: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivitySoundMatchBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.backButton.setOnClickListener {
+            finish()
+        }
 
         binding.playSound.setOnClickListener {
 //            playsound with animation
@@ -70,17 +73,17 @@ private var mediaPlayer: MediaPlayer? = null
     }
 
     private fun checkAnswer() {
-        if (selectedOption == correctOption){
+        if (selectedOption == correctOption) {
             CustomAlert.showCustomAlert(this, AlertType.CORRECT, "Corrext Answer", "Move next")
-        }else{
+        } else {
             CustomAlert.showCustomAlert(this, AlertType.WRONG, "Wrong", "Try again")
         }
     }
 
     private fun toggleHint() {
-        if (isHintVisible){
+        if (isHintVisible) {
             hideHint()
-        }else{
+        } else {
             showHint()
         }
         isHintVisible = !isHintVisible
@@ -97,7 +100,7 @@ private var mediaPlayer: MediaPlayer? = null
     }
 
     private fun hideHint() {
-     binding.btnHint.setImageResource(R.drawable.hint_icon)
+        binding.btnHint.setImageResource(R.drawable.hint_icon)
         binding.hintBubble.animate()
             .alpha(0f)
             .translationY(20f)

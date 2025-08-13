@@ -20,6 +20,9 @@ class GameActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.backButton.setOnClickListener {
+            finish()
+        }
 
 //dummy data
         val data = listOf(

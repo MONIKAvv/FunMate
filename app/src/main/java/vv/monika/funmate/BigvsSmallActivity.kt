@@ -19,6 +19,10 @@ val correctOption = "C"
         binding = ActivityBigvsSmallBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.backButton.setOnClickListener {
+            finish()
+        }
+
         binding.vsOptA.setOnClickListener {
             selectedOption = "A"
             checkAnswer()

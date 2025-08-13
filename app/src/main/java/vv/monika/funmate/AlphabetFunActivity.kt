@@ -25,6 +25,9 @@ class AlphabetFunActivity : AppCompatActivity() {
         binding = ActivityAlphabetFunBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.backButton.setOnClickListener {
+            finish()
+        }
 
 //        swtitch case for question matching
 

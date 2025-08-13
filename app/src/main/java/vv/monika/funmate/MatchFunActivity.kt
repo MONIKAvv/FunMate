@@ -22,7 +22,9 @@ class MatchFunActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMatchFunBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+binding.backButton.setOnClickListener {
+    finish()
+}
 
         binding.mathOptA.setOnClickListener {
             selectedOption = "A"
