@@ -2,35 +2,45 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/nav_home"
         android:icon="@drawable/home"
         android:title="Home"/>
 
     <item
-        android:icon="@drawable/home"
+        android:id="@+id/nav_setting"
+        android:icon="@drawable/setting"
         android:title="How it works"/>
     <item
-        android:icon="@drawable/home"
+        android:id="@+id/nav_redeem"
+        android:icon="@drawable/wallet"
         android:title="Redeem"/>
     <item
-        android:icon="@drawable/home"
-        android:title="Hostory"/>
+        android:id="@+id/nav_history"
+        android:icon="@drawable/history"
+        android:title="History"/>
     <item
-        android:icon="@drawable/home"
+        android:id="@+id/nav_telegram"
+        android:icon="@drawable/telegram"
         android:title="Telegram"/>
     <item
-        android:icon="@drawable/home"
+        android:id="@+id/nav_rating"
+        android:icon="@drawable/rating"
         android:title="Rate us"/>
     <item
-        android:icon="@drawable/home"
+        android:id="@+id/nav_share"
+        android:icon="@drawable/share"
         android:title="Share us"/>
     <item
-        android:icon="@drawable/home"
+        android:id="@+id/nav_email"
+        android:icon="@drawable/white_email"
         android:title="Email"/>
     <item
-        android:icon="@drawable/home"
-        android:title="Delete account"/>
+        android:id="@+id/nav_delete_acc"
+        android:icon="@drawable/delete"
+        android:title="Delete Account"/>
     <item
-        android:icon="@drawable/home"
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/logout"
         android:title="Logout"/>
 
 </menu>

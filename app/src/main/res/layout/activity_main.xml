@@ -57,16 +57,16 @@
 
     <!-- Side Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigation_view"
-        android:layout_width="360dp"
-        android:layout_height="700dp"
+        android:id="@+id/side_nav_view"
+        android:layout_width="300dp"
+        android:layout_height="750dp"
         android:layout_gravity="start"
-        android:layout_marginTop="60dp"
-        android:paddingTop="30dp"
-        app:itemIconPadding="20dp"
         android:background="@drawable/drawer_bg"
-        app:menu="@menu/drawer_menu_item"
+        app:headerLayout="@layout/drawer_header"
+        app:itemIconPadding="20dp"
         app:itemTextColor="@color/white"
-        app:itemIconTint="@color/white" />
+        app:menu="@menu/drawer_menu_item">
+
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

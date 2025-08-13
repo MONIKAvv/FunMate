@@ -100,6 +100,7 @@
         android:layout_width="63dp"
         android:layout_height="63dp"
         app:cardCornerRadius="35dp"
+        app:cardBackgroundColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/button4"
         app:layout_constraintTop_toTopOf="@+id/button4">
 
@@ -117,13 +118,14 @@
         android:layout_height="52dp"
         android:layout_marginEnd="24dp"
         app:cardCornerRadius="35dp"
+        app:cardBackgroundColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/editTextText2"
         app:layout_constraintEnd_toEndOf="@+id/editTextText"
         app:layout_constraintTop_toTopOf="@+id/editTextText" >
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/copy"
+            android:src="@drawable/copy_white"
             android:layout_gravity="center"
 
             />
