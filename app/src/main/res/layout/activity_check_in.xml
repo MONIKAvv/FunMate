@@ -81,7 +81,7 @@
         android:id="@+id/imageView16"
         android:layout_width="385dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recyclerView"
@@ -104,11 +104,11 @@
         android:id="@+id/imageView17"
         android:layout_width="379dp"
         android:layout_height="400dp"
-        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@+id/textView11"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.593"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView16"
         app:srcCompat="@drawable/border_rec" />
 
     <TextView
@@ -307,7 +307,7 @@
         android:layout_width="0dp"
         android:layout_height="67dp"
         tools:listitem="day_check_in_menu"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -343,8 +343,9 @@
     <ImageView
         android:layout_width="12dp"
         android:layout_height="12dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="12dp"
         android:src="@drawable/timer"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/imageView38"
         app:layout_constraintStart_toStartOf="@+id/imageView38"
         app:layout_constraintTop_toBottomOf="@+id/monday" />
@@ -374,8 +375,9 @@
     <ImageView
         android:layout_width="12dp"
         android:layout_height="12dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="12dp"
         android:src="@drawable/timer"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView39"
         app:layout_constraintEnd_toEndOf="@+id/imageView39"
         app:layout_constraintStart_toStartOf="@+id/imageView39"
         app:layout_constraintTop_toBottomOf="@+id/sunday" />
@@ -405,8 +407,9 @@
     <ImageView
         android:layout_width="12dp"
         android:layout_height="12dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="12dp"
         android:src="@drawable/timer"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView40"
         app:layout_constraintEnd_toEndOf="@+id/imageView40"
         app:layout_constraintStart_toStartOf="@+id/imageView40"
         app:layout_constraintTop_toBottomOf="@+id/saturday" />
@@ -436,8 +439,9 @@
     <ImageView
         android:layout_width="12dp"
         android:layout_height="12dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="12dp"
         android:src="@drawable/timer"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView41"
         app:layout_constraintEnd_toEndOf="@+id/imageView41"
         app:layout_constraintStart_toStartOf="@+id/imageView41"
         app:layout_constraintTop_toBottomOf="@+id/friday" />
@@ -466,9 +470,10 @@
 
     <ImageView
         android:layout_width="12dp"
-        android:layout_height="6dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="12dp"
+        android:layout_marginBottom="12dp"
         android:src="@drawable/double_check"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView42"
         app:layout_constraintEnd_toEndOf="@+id/imageView42"
         app:layout_constraintStart_toStartOf="@+id/imageView42"
         app:layout_constraintTop_toBottomOf="@+id/thrusday" />
@@ -498,8 +503,9 @@
     <ImageView
         android:layout_width="12dp"
         android:layout_height="12dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="12dp"
         android:src="@drawable/timer"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView43"
         app:layout_constraintEnd_toEndOf="@+id/imageView43"
         app:layout_constraintStart_toStartOf="@+id/imageView43"
         app:layout_constraintTop_toBottomOf="@+id/wednesday" />
@@ -529,8 +535,9 @@
     <ImageView
         android:layout_width="12dp"
         android:layout_height="12dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="12dp"
         android:src="@drawable/timer"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView44"
         app:layout_constraintEnd_toEndOf="@+id/imageView44"
         app:layout_constraintStart_toStartOf="@+id/imageView44"
         app:layout_constraintTop_toBottomOf="@+id/tuesday" />

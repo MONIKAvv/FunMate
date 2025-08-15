@@ -41,7 +41,6 @@ class HomeFragment : Fragment() {
             it.startAnimation(createScaleAnimation())
             startActivity(Intent(requireContext(), CheckInActivity::class.java))
 //            alert
-           CustomAlert.showCustomAlert(requireContext(),AlertType.WRONG, "Wrong Answer", "Oops! Please try again")
         }
         binding.vigSmall.setOnClickListener {
             it.startAnimation(createScaleAnimation())
