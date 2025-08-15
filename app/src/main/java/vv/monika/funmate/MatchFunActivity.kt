@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import vv.monika.funmate.databinding.ActivityMatchFunBinding
 
@@ -16,45 +17,47 @@ class MatchFunActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMatchFunBinding
     private var isHintVisible = false
+    private var currentQuestion: QuestionsItem? = null
+    private var questionList: List<QuestionsItem>? = null
+    private var currentQuestionIndex = 0
 
-    val correctOption = "A"
     var selectedOption: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("DEBUG", "onCreate started")
+        enableEdgeToEdge()
+        binding = ActivityMatchFunBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        try {
-            enableEdgeToEdge()
-            Log.d("DEBUG", "Edge-to-edge enabled")
+        setupClickListeners()
+        fetchQuestion()
+    }
 
-            binding = ActivityMatchFunBinding.inflate(layoutInflater)
-            Log.d("DEBUG", "Binding inflated")
+    private fun setupClickListeners() {
+        binding.backButton.setOnClickListener {
+            finish()
+        }
+        binding.btnHint.setOnClickListener {
+            toggleHint()
+        }
+        binding.mathOptA.setOnClickListener {
+            selectedOption = "A"
+            checkAnswer()
+        }
+        binding.mathOptB.setOnClickListener {
+            selectedOption = "B"
+            checkAnswer()
+        }
 
-            setContentView(binding.root)
-            Log.d("DEBUG", "Content view set")
+        binding.mathOptC.setOnClickListener {
+            selectedOption = "C"
+            checkAnswer()
+        }
 
-            // Test each view one by one
-            binding.backButton?.let {
-                it.setOnClickListener { finish() }
-                Log.d("DEBUG", "Back button found and set")
-            } ?: Log.e("DEBUG", "backButton is NULL!")
-
-            Log.d("DEBUG", "About to call fetchQuestion")
-            fetchQuestion()
-            Log.d("DEBUG", "fetchQuestion called")
-
-            // Comment out all the other view setups for now to isolate the issue
-            /*
-            binding.mathOptA.setOnClickListener {
-                selectedOption = "A"
-                checkAnswer()
-            }
-            */
-
-        } catch (e: Exception) {
-            Log.e("CRASH", "onCreate crashed: ${e.message}")
-            e.printStackTrace()
+        binding.mathOptD.setOnClickListener {
+            selectedOption = "D"
+            checkAnswer()
         }
     }
 
@@ -70,35 +73,146 @@ class MatchFunActivity : AppCompatActivity() {
                 // Add a timeout using withTimeout
                 withTimeout(20000) { // 20 second timeout
                     val result = questionAPI.getQuestion()
-                    Log.d("API_DEBUG", "Got response, processing...")
-
-                    Log.d("API_RESPONSE", "Response code: ${result.code()}")
-                    Log.d("API_RESPONSE", "Response body: ${result.body().toString()}")
 
                     if (result.isSuccessful) {
                         Log.d("result", "Success: ${result.body()}")
+                        val questions = result.body()
+                        Log.d("API", "Got ${questions?.size} questions")
+
+//                        update ui
+                        withContext(Dispatchers.Main) {
+                            if (!questions.isNullOrEmpty()) {
+                                questionList = questions
+                                currentQuestionIndex = 0
+                                displayCurrentQuestion()
+                            } else {
+                                showError("No Question Found")
+                            }
+
+                        }
+
                     } else {
+                        withContext(Dispatchers.Main) {
+                            showError("Failed to fetch question: ${result.message()}")
+                        }
                         Log.e("API_ERROR", "Error: ${result.code()} - ${result.message()}")
                     }
                 }
             } catch (e: TimeoutCancellationException) {
-                Log.e("Api_Error", "Request timed out after 20 seconds")
+                withContext(Dispatchers.Main) {
+                    showError("Request timed out")
+                }
             } catch (e: Exception) {
-                Log.e("Api_Error", "Exception: ${e.message}")
-                e.printStackTrace()
+                Log.e("API_Error", "Exception: ${e.message}")
+                withContext(Dispatchers.Main) {
+                    showError("Error: ${e.message}")
+                }
             }
 
             Log.d("result", "hey this - coroutine ended")
         }
     }
 
-    private fun checkAnswer() {
-        if (selectedOption == correctOption) {
-            CustomAlert.showCustomAlert(this, AlertType.CORRECT, "Correct ", "oky well done")
-        } else {
-            CustomAlert.showCustomAlert(this, AlertType.WRONG, "Wrong", "Please do it corectly")
+    private fun displayCurrentQuestion() {
+        val questions = questionList ?: return
+        if (currentQuestionIndex >= questions.size) return
+
+        currentQuestion = questions[currentQuestionIndex]
+        val question = currentQuestion ?: return
+
+        // Update UI with question data
+        binding.apply {
+            // Set question text (assuming you have a TextView for question)
+             questionTextview.text = question.Question
+
+            // Set options
+            mathOptA.text = question.OptionA ?: "Option A"
+            mathOptB.text = question.OptionB ?: "Option B"
+            mathOptC.text = question.OptionC ?: "Option C"
+            mathOptD.text = question.OptionD ?: "Option D"
+
+            // Reset selection
+            selectedOption = null
+            resetOptionColors()
+        }
+
+        Log.d("QUESTION", "Displaying: ${question.Question}")
+        Log.d("QUESTION", "Answer: ${question.AnswerIndex}")
+    }
+
+
+
+    private fun resetOptionColors() {
+        // Reset all option buttons to default state
+        binding.apply {
+//            mathOptA.setBackgroundResource(R.drawable.default_option_bg) // Your default background
+//            mathOptB.setBackgroundResource(R.drawable.default_option_bg)
+//            mathOptC.setBackgroundResource(R.drawable.default_option_bg)
+//            mathOptD.setBackgroundResource(R.drawable.default_option_bg)
         }
     }
+
+    private fun checkAnswer() {
+        val correctAnswer = currentQuestion?.AnswerIndex
+
+
+        if (selectedOption == correctAnswer) {
+            Log.d("ANSWER", "Correct! Selected: $selectedOption, Answer: $correctAnswer")
+            CustomAlert.showCustomAlert(
+                context = this,
+                type = AlertType.CORRECT,
+                title = "Correct!",
+                description = "Well done! 🎉",
+                onNextClick = {
+                    loadNextQuestion()  // This will be called when Next button is clicked
+                }
+            )
+        } else {
+            Log.d("ANSWER", "Wrong! Selected: $selectedOption, Answer: $correctAnswer")
+            CustomAlert.showCustomAlert(
+                context = this,
+                type = AlertType.WRONG,
+                title = "Wrong Answer",
+                description = "Try again! 💪 , Its better if you solve this, if you want to move next, Click Next",
+                onNextClick = {
+                    // Reset for retry or load next question
+                    selectedOption = null
+                    resetOptionColors()
+                    loadNextQuestion()
+                    // Or you can call loadNextQuestion() here too if you want
+                }
+            )
+        }
+    }
+
+    private fun loadNextQuestion() {
+        currentQuestionIndex++
+        val questions = questionList ?: return
+
+        if (currentQuestionIndex < questions.size) {
+            displayCurrentQuestion()
+        } else {
+            // All questions completed
+            CustomAlert.showCustomAlert(
+                this,
+                AlertType.CORRECT,
+                "Completed!",
+                "You've completed all questions! 🏆",
+                onNextClick = {
+                    finish() // Go back or restart
+                }
+            )
+        }
+    }
+
+    private fun showError(message: String) {
+        Log.e("ERROR", message)
+        // Show error to user (Toast or Dialog)
+        CustomAlert.showCustomAlert(this, AlertType.WRONG, "Error", message, onNextClick = {
+            finish() // Go back on error
+        })
+    }
+
 
     private fun toggleHint() {
         if (isHintVisible) {

@@ -56,9 +56,15 @@ val correctOption = "C"
 
     private fun checkAnswer() {
         if (selectedOption == correctOption){
-            CustomAlert.showCustomAlert(this, AlertType.CORRECT, "Good", "Move to next")
+            CustomAlert.showCustomAlert(this, AlertType.CORRECT, "Good", "Move to next") {
+
+
+            }
         }else{
-            CustomAlert.showCustomAlert(this, AlertType.WRONG, "Oops Wrong", "Please once more")
+            CustomAlert.showCustomAlert(this, AlertType.WRONG, "Oops Wrong", "Please once more") {
+
+
+            }
         }
     }
 

@@ -1,14 +1,9 @@
 package vv.monika.funmate
 
-import android.R.attr.button
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.drawable.toDrawable
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import vv.monika.funmate.databinding.ActivityAlphabetFunBinding
 
 class AlphabetFunActivity : AppCompatActivity() {
@@ -72,9 +67,25 @@ class AlphabetFunActivity : AppCompatActivity() {
 
     private fun checkAnswer() {
         if (selectedOption == correctOption) {
-            CustomAlert.showCustomAlert(this,AlertType.CORRECT, "Correct Answer", "You did Great")
+            CustomAlert.showCustomAlert(
+                this,
+                AlertType.CORRECT,
+                "Correct Answer",
+                "You did Great"
+            ) {
+
+
+            }
         } else {
-            CustomAlert.showCustomAlert(this,AlertType.WRONG, "Wrong Answer", "Oops! Please try again")
+            CustomAlert.showCustomAlert(
+                this,
+                AlertType.WRONG,
+                "Wrong Answer",
+                "Oops! Please try again"
+            ) {
+
+
+            }
         }
     }
 

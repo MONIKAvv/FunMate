@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import vv.monika.funmate.databinding.ActivitySoundMatchBinding
 
 class SoundMatchActivity : AppCompatActivity() {
@@ -74,9 +72,15 @@ class SoundMatchActivity : AppCompatActivity() {
 
     private fun checkAnswer() {
         if (selectedOption == correctOption) {
-            CustomAlert.showCustomAlert(this, AlertType.CORRECT, "Corrext Answer", "Move next")
+            CustomAlert.showCustomAlert(this, AlertType.CORRECT, "Corrext Answer", "Move next") {
+
+
+            }
         } else {
-            CustomAlert.showCustomAlert(this, AlertType.WRONG, "Wrong", "Try again")
+            CustomAlert.showCustomAlert(this, AlertType.WRONG, "Wrong", "Try again") {
+
+
+            }
         }
     }
 
