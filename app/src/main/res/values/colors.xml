@@ -13,4 +13,6 @@
     <color name="pending_text_color">#D29D43</color>
     <color name="success_text_color">#4AD243</color>
     <color name="failed_text_color">#F62F2F</color>
+    <color name="default_option">#F5F5F5</color>
+    <color name="selected_option">#E3F2FD</color>
 </resources>
