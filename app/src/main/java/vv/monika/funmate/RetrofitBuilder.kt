@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitBuilder {
-    const val API = "https://backend-node-js-cc04.onrender.com/"
+    const val API = "https://backend-node-js-1-mkfw.onrender.com/"
 
     fun getInstance(): Retrofit {
         // Add logging interceptor to see what's happening

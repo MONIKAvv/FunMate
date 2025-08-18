@@ -3,27 +3,30 @@ package vv.monika.funmate
 import com.google.gson.annotations.SerializedName
 
 data class QuestionsItem(
-    @SerializedName("Answer Index")  // Exact field name from your MongoDB
+    @SerializedName("Answer Index")
     val AnswerIndex: String?,
 
-    @SerializedName("AudioUrl")  // Matches your MongoDB
+    @SerializedName("AudioUrl")
     val AudioUrl: String?,
 
-    @SerializedName("Option A")  // Exact field name with space
+    @SerializedName("Option A")
     val OptionA: String?,
 
-    @SerializedName("Option B")  // Exact field name with space
+    @SerializedName("Option B")
     val OptionB: String?,
 
-    @SerializedName("Option C")  // Exact field name with space
+    @SerializedName("Option C")
     val OptionC: String?,
 
-    @SerializedName("Option D")  // Exact field name with space
+    @SerializedName("Option D")
     val OptionD: String?,
 
-    @SerializedName("Question")  // Matches your MongoDB
+    @SerializedName("Question")
     val Question: String?,
 
-    @SerializedName("Subjects")  // Matches your MongoDB
-    val Subjects: String?
+    @SerializedName("Subjects")
+    val Subjects: String?,
+
+    @SerializedName("Hint")
+    val Hint : String
 )

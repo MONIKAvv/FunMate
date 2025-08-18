@@ -135,6 +135,7 @@ abstract class BaseQuestionActivity : AppCompatActivity() {
             mathOptB.text = question.OptionB ?: "Option B"
             mathOptC.text = question.OptionC ?: "Option C"
             mathOptD.text = question.OptionD ?: "Option D"
+            hintBubble.text = question.Hint
 
             selectedOption = null
             resetOptionColors()
@@ -195,6 +196,10 @@ abstract class BaseQuestionActivity : AppCompatActivity() {
         val questions = questionsList ?: return
 
         if (currentQuestionIndex < questions.size) {
+            binding.apply {
+                currentQue.text = currentQuestionIndex.toString()
+                totalQue.text = questions.size.toString()
+            }
             displayCurrentQuestion()
         } else {
             CustomAlert.showCustomAlert(
