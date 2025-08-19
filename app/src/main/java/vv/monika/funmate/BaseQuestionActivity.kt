@@ -7,17 +7,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.viewbinding.ViewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import vv.monika.funmate.databinding.ActivityBigvsSmallBinding
 import vv.monika.funmate.databinding.ActivityMatchFunBinding
 
 // Base class for all subject activities
 abstract class BaseQuestionActivity : AppCompatActivity() {
+    protected abstract fun getViewBinding(): ViewBinding
 
-    protected lateinit var binding: ActivityMatchFunBinding
+    protected lateinit var binding: ViewBinding
     protected var isHintVisible = false
 
     // Question data
@@ -26,13 +29,13 @@ abstract class BaseQuestionActivity : AppCompatActivity() {
     protected var currentQuestionIndex = 0
     protected var selectedOption: String? = null
 
-    // Abstract method - har subject activity me define karna hoga
+    // Abstract method - har subject activity me define it
     protected abstract fun getSubjectName(): String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityMatchFunBinding.inflate(layoutInflater)
+        binding = getViewBinding()
         setContentView(binding.root)
 
         setupClickListeners()
@@ -44,10 +47,10 @@ abstract class BaseQuestionActivity : AppCompatActivity() {
         binding.btnHint.setOnClickListener { toggleHint() }
 
         // Remove checkAnswer() from click listeners
-        binding.mathOptA.setOnClickListener { selectOption("A") }
-        binding.mathOptB.setOnClickListener { selectOption("B") }
-        binding.mathOptC.setOnClickListener { selectOption("C") }
-        binding.mathOptD.setOnClickListener { selectOption("D") }
+        binding.optionB.setOnClickListener { selectOption("A") }
+        binding.optionB.setOnClickListener { selectOption("B") }
+        binding.optionC.setOnClickListener { selectOption("C") }
+        binding.optionD.setOnClickListener { selectOption("D") }
     }
 
     private fun selectOption(option: String) {
@@ -131,10 +134,10 @@ abstract class BaseQuestionActivity : AppCompatActivity() {
         binding.apply {
             // Set options
             questionTextview.text = question.Question
-            mathOptA.text = question.OptionA ?: "Option A"
-            mathOptB.text = question.OptionB ?: "Option B"
-            mathOptC.text = question.OptionC ?: "Option C"
-            mathOptD.text = question.OptionD ?: "Option D"
+            optionA.text = question.OptionA ?: "Option A"
+            optionB.text = question.OptionB ?: "Option B"
+            optionC.text = question.OptionC ?: "Option C"
+            optionD.text = question.OptionD ?: "Option D"
             hintBubble.text = question.Hint
 
             selectedOption = null
@@ -214,10 +217,10 @@ abstract class BaseQuestionActivity : AppCompatActivity() {
 
     private fun showLoading(show: Boolean) {
         binding.apply {
-            mathOptA.isEnabled = !show
-            mathOptB.isEnabled = !show
-            mathOptC.isEnabled = !show
-            mathOptD.isEnabled = !show
+            optionA.isEnabled = !show
+            optionB.isEnabled = !show
+            optionC.isEnabled = !show
+            optionD.isEnabled = !show
         }
     }
 

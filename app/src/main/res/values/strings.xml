@@ -2,4 +2,8 @@
     <string name="app_name">FunMate</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="big_vs_small">Big Vs Small</string>
+    <string name="sound_match">Sound Match</string>
+    <string name="alphabet_fun">Alphabet Fun</string>
+    <string name="match_fun">Match Fun</string>
 </resources>

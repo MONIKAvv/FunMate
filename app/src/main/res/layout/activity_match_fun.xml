@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_medium"
-        android:text="Match Fun"
+        android:text="@string/match_fun"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/back_button"
@@ -153,7 +153,7 @@
         app:layout_constraintTop_toTopOf="@+id/question_textview" />
 
     <Button
-        android:id="@+id/math_opt_a"
+        android:id="@+id/option_a"
         android:layout_width="288dp"
         android:layout_height="56dp"
         android:background="@drawable/op_a"
@@ -169,7 +169,7 @@
         app:layout_constraintTop_toBottomOf="@+id/question_textview" />
 
     <Button
-        android:id="@+id/math_opt_b"
+        android:id="@+id/option_b"
         android:layout_width="288dp"
         android:layout_height="56dp"
         android:background="@drawable/op_b"
@@ -181,12 +181,12 @@
         android:textColor="@color/gray"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/math_opt_a"
-        app:layout_constraintTop_toTopOf="@+id/math_opt_a" />
+        app:layout_constraintStart_toEndOf="@+id/option_a"
+        app:layout_constraintTop_toTopOf="@+id/option_a" />
 
 
     <Button
-        android:id="@+id/math_opt_c"
+        android:id="@+id/option_c"
         android:layout_width="280dp"
         android:layout_height="56dp"
         android:background="@drawable/op_c"
@@ -198,12 +198,12 @@
         android:layout_marginTop="26dp"
         android:textColor="@color/gray"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/math_opt_a"
-        app:layout_constraintTop_toBottomOf="@+id/math_opt_a" />
+        app:layout_constraintStart_toStartOf="@+id/option_a"
+        app:layout_constraintTop_toBottomOf="@+id/option_a" />
 
 
     <Button
-        android:id="@+id/math_opt_d"
+        android:id="@+id/option_d"
         android:layout_width="280dp"
         android:layout_height="56dp"
         android:background="@drawable/op_d"
@@ -215,8 +215,8 @@
         android:textColor="@color/gray"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/math_opt_c"
-        app:layout_constraintTop_toTopOf="@+id/math_opt_c" />
+        app:layout_constraintStart_toEndOf="@+id/option_c"
+        app:layout_constraintTop_toTopOf="@+id/option_c" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView4"
