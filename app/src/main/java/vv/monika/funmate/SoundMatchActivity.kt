@@ -7,6 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import vv.monika.funmate.databinding.ActivitySoundMatchBinding
 
-class SoundMatchActivity : BaseQuestionActivity() {
-    override fun getSubjectName(): String ="Sound"
+class SoundMatchActivity : AppCompatActivity() {
+//    override fun getSubjectName(): String ="Sound"
 }

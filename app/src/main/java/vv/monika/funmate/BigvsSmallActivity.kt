@@ -6,7 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import vv.monika.funmate.databinding.ActivityBigvsSmallBinding
 
-class BigvsSmallActivity : BaseQuestionActivity() {
-    override fun getSubjectName(): String = "Bigsmall"
+class BigvsSmallActivity : AppCompatActivity() {
+//    override fun getSubjectName(): String = "Bigsmall"
 
 }

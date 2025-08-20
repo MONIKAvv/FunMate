@@ -6,7 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import vv.monika.funmate.databinding.ActivityAlphabetFunBinding
 
-class AlphabetFunActivity : BaseQuestionActivity() {
+class AlphabetFunActivity : AppCompatActivity() {
 
-    override fun getSubjectName(): String ="Alphabets"
+//    override fun getSubjectName(): String ="Alphabets"
 }
