@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import vv.monika.funmate.data.MathsQuestion
 import vv.monika.funmate.databinding.ActivityMatchFunBinding
 import kotlin.random.Random
 
@@ -15,7 +16,7 @@ class MatchFunActivity : AppCompatActivity() {
     private var score = 0
     private var hasAnswered = false
 
-    private lateinit var currentQuestion: Question
+    private lateinit var currentQuestion: MathsQuestion
 
     // --- Model types ---
     enum class Op(val symbol: String, val apply: (Int, Int) -> Int) {
@@ -25,17 +26,9 @@ class MatchFunActivity : AppCompatActivity() {
         MOD("%", { a, b -> a % b })
     }
 
-    data class Question(
-        val a: Int,
-        val b: Int,
-        val op: Op,
-        val answer: Int,
-        val options: List<Int>, // size 4
-        val correctIndex: Int   // 0..3
-    )
 
-    override fun onCreate(savedInstanceStart: Bundle?) {
-        super.onCreate(savedInstanceStart)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMatchFunBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -57,7 +50,7 @@ class MatchFunActivity : AppCompatActivity() {
 //        binding.nextButton.setOnClickListener { loadNextQuestion() }
     }
 
-    private fun renderQuestion(q: Question) {
+    private fun renderQuestion(q: MathsQuestion) {
         hasAnswered = false
         binding.questionTextview.text = "${q.a} ${q.op.symbol} ${q.b} = ?"
 
@@ -128,7 +121,7 @@ class MatchFunActivity : AppCompatActivity() {
 
 //        binding.hintBubble.visibility = View.GONE
 //        binding.btnHint.setImageResource(R.drawable.hint_icon)
-
+        hideHint()
 
         if (currentIndex >= totalQuestions) {
             showFinalScore()
@@ -152,8 +145,9 @@ class MatchFunActivity : AppCompatActivity() {
     }
 
     // ---------------- Question generation ----------------
-    private fun generateQuestion(): Question {
+    private fun generateQuestion(): MathsQuestion {
         val op = Op.values().random()
+//        val op = Op.entries.toTypedArray().random()
 
         // Keep numbers in 1..100; ensure non-negative subtraction if you want (swap a/b)
         var a = Random.nextInt(1, 101)
@@ -167,7 +161,7 @@ class MatchFunActivity : AppCompatActivity() {
         val answer = op.apply(a, b)
         val options = buildOptions(answer)
         val correctIdx = options.indexOf(answer)
-        return Question(a, b, op, answer, options, correctIdx)
+        return MathsQuestion(a, b, op, answer, options, correctIdx)
     }
 
     private fun buildOptions(answer: Int): List<Int> {
@@ -217,6 +211,7 @@ class MatchFunActivity : AppCompatActivity() {
             .setDuration(120)
             .withEndAction { binding.hintBubble.visibility = View.GONE }
             .start()
+        isHintVisible = false
 
     }
 }
