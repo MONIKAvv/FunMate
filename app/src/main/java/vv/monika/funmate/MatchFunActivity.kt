@@ -41,6 +41,7 @@ class MatchFunActivity : AppCompatActivity() {
     private fun setupListeners() {
         binding.backButton.setOnClickListener { finish() }
         binding.btnHint.setOnClickListener { toggleHint() }
+        binding.skipBtn.setOnClickListener { loadNextQuestion() }
 
         binding.optionA.setOnClickListener { onOptionClicked(0) }
         binding.optionB.setOnClickListener { onOptionClicked(1) }
@@ -108,7 +109,11 @@ class MatchFunActivity : AppCompatActivity() {
             type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
             title = if (isCorrect) "Correct!" else "Wrong Answer",
             description = if (isCorrect) "Well done! 🎉" else "Try again! 💪",
-            onNextClick = { loadNextQuestion() }
+            onNextClick = { loadNextQuestion() },
+            onCloseClick = {
+                hasAnswered = false
+                setOptionsEnabled(true)
+            }
         )
 
         // Simple fallback: automatically go to next question after a short delay
@@ -137,11 +142,14 @@ class MatchFunActivity : AppCompatActivity() {
         // TODO: Replace with your own summary UI / dialog / navigate to result screen.
         // Example minimal Toast:
         // Toast.makeText(this, "Final Score: $score / $totalQuestions", Toast.LENGTH_LONG).show()
-//        binding.questionText.text = "Finished!"
-//        binding.resultText.visibility = View.VISIBLE
-//        binding.resultText.text = "Final Score: $score / $totalQuestions"
-//        setOptionsEnabled(false)
-//        binding.nextButton.isEnabled = false
+        binding.questionTextview.text = "Finished!"
+       CustomAlert.showCustomAlert(
+                context = this,
+                type = AlertType.CORRECT,
+                title = "Quiz Finished 🎉",
+                description = "Your final score: $score / $totalQuestions",
+                onNextClick = { finish() }
+            )
     }
 
     // ---------------- Question generation ----------------
@@ -211,7 +219,6 @@ class MatchFunActivity : AppCompatActivity() {
             .setDuration(120)
             .withEndAction { binding.hintBubble.visibility = View.GONE }
             .start()
-        isHintVisible = false
-
     }
+
 }

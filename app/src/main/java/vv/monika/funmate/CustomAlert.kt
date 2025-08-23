@@ -14,7 +14,8 @@ object CustomAlert {
         type: AlertType,
         title: String,
         description: String,
-        onNextClick: (() -> Unit)? = null // Optional callback for next button
+        onNextClick: (() -> Unit)? = null,
+        onCloseClick: (() -> Unit)? = null// Optional callback for next button
     ) {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.activity_custom_alert, null)
         val dialogBuilder = AlertDialog.Builder(context).setView(dialogView).setCancelable(false)
@@ -43,6 +44,7 @@ object CustomAlert {
 
         closeBtn.setOnClickListener {
             alertDialog.dismiss()
+            onCloseClick?.invoke()
         }
 
         nextBtn.setOnClickListener {

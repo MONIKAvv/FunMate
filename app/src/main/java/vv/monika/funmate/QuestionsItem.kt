@@ -3,30 +3,30 @@ package vv.monika.funmate
 import com.google.gson.annotations.SerializedName
 
 data class QuestionsItem(
-    @SerializedName("Answer Index")
+    @SerializedName("AnswerIndex")
     val AnswerIndex: String?,
 
     @SerializedName("AudioUrl")
-    val AudioUrl: String?,
+    val AudioUrl: String?,   // optional, keep if you need audio later
 
-    @SerializedName("Option A")
+    @SerializedName("OptionA")
     val OptionA: String?,
 
-    @SerializedName("Option B")
+    @SerializedName("OptionB")
     val OptionB: String?,
 
-    @SerializedName("Option C")
+    @SerializedName("OptionC")
     val OptionC: String?,
 
-    @SerializedName("Option D")
+    @SerializedName("OptionD")
     val OptionD: String?,
 
     @SerializedName("Question")
     val Question: String?,
 
-    @SerializedName("Subjects")
-    val Subjects: String?,
+    @SerializedName("Subject")
+    val Subject: String?,   // ✅ match JSON key exactly
 
     @SerializedName("Hint")
-    val Hint : String
+    val Hint: String?
 )

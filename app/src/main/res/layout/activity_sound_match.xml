@@ -162,7 +162,7 @@
         android:textAllCaps="false"
         android:layout_marginTop="40dp"
         android:textColor="@color/gray"
-        android:textSize="20sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/question_textview"
         app:layout_constraintTop_toBottomOf="@+id/question_textview" />
 
@@ -177,7 +177,7 @@
         android:text="Dog"
         android:textAllCaps="false"
         android:textColor="@color/gray"
-        android:textSize="20sp"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/option_a"
         app:layout_constraintTop_toTopOf="@+id/option_a" />
@@ -195,7 +195,7 @@
         android:textAllCaps="false"
         android:layout_marginTop="26dp"
         android:textColor="@color/gray"
-        android:textSize="20sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/option_a"
         app:layout_constraintTop_toBottomOf="@+id/option_a" />
 
@@ -211,7 +211,7 @@
         android:text="Sheep"
         android:textAllCaps="false"
         android:textColor="@color/gray"
-        android:textSize="20sp"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/option_c"
         app:layout_constraintTop_toTopOf="@+id/option_c" />
@@ -223,6 +223,7 @@
         android:layout_marginBottom="72dp"
         android:backgroundTint="@color/gray"
         app:cardCornerRadius="38dp"
+        android:layout_marginEnd="72dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -234,6 +235,28 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             app:srcCompat="@drawable/hint_icon" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView10"
+        android:layout_width="57dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="72dp"
+        app:cardBackgroundColor="@color/gray"
+        app:cardCornerRadius="38dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cardView6">
+
+
+        <ImageButton
+            android:id="@+id/skip_btn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/skip_icon" />
+
     </androidx.cardview.widget.CardView>
 
     <com.airbnb.lottie.LottieAnimationView
@@ -281,11 +304,23 @@
         app:layout_constraintTop_toBottomOf="@+id/cardView6" />
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins"
+        android:text="Skip"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/cardView10"
+        app:layout_constraintStart_toStartOf="@+id/cardView10"
+        app:layout_constraintTop_toBottomOf="@+id/cardView10" />
+
+    <TextView
         android:id="@+id/hintBubble"
         android:layout_width="252dp"
         android:layout_height="185dp"
         android:background="@drawable/hint_bg"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="55dp"
         android:paddingTop="32dp"
         android:layout_marginBottom="-15dp"
         android:text="If you count up from 5 \n which of the given option \n would you say next"

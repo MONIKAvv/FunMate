@@ -153,6 +153,7 @@ class BigvsSmallActivity : AppCompatActivity() {
     private fun setUpListeners() {
         binding.backButton.setOnClickListener { finish() }
         binding.btnHint.setOnClickListener { toggleHint() }
+        binding.skipBtn.setOnClickListener { loadNextQuestion() }
 
         binding.optionA.setOnClickListener { onOptionClicked(0) }
         binding.optionB.setOnClickListener { onOptionClicked(1) }
@@ -173,7 +174,11 @@ class BigvsSmallActivity : AppCompatActivity() {
             type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
             title = if (isCorrect) "Correct! 🎉" else "Wrong Answer ❌",
             description = if (isCorrect) "Well done!" else "Try again!",
-            onNextClick = { loadNextQuestion() }
+            onNextClick = { loadNextQuestion() },
+            onCloseClick = {
+                hasAnswered = false
+                setOptionsEnabled(true)
+            }
         )
     }
 
@@ -212,11 +217,12 @@ class BigvsSmallActivity : AppCompatActivity() {
             .setDuration(120)
             .withEndAction { binding.hintBubble.visibility = View.GONE }
             .start()
-        isHintVisible = false
+//        isHintVisible = false
     }
 
     // ---------- Finish ----------
     private fun showFinalScore() {
+        binding.questionTextview.text = "Finished!"
         CustomAlert.showCustomAlert(
             context = this,
             type = AlertType.CORRECT,
