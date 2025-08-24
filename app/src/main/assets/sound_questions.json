@@ -450,7 +450,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Ping' softly?",
+      "Question": "Which animal says 'Ping'?",
       "OptionA": "Water drop",
       "OptionB": "Small bird",
       "OptionC": "Mouse",
@@ -770,7 +770,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Splash' gently?",
+      "Question": "Which animal says 'Splash'?",
       "OptionA": "Duck",
       "OptionB": "Swan",
       "OptionC": "Fish",
@@ -860,7 +860,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Whoosh' softly?",
+      "Question": "Which animal says 'Whoosh'?",
       "OptionA": "Wind",
       "OptionB": "Owl",
       "OptionC": "Bat",
@@ -870,7 +870,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Whistle' high?",
+      "Question": "Which animal says 'Whistle'?",
       "OptionA": "Dolphin",
       "OptionB": "Whale",
       "OptionC": "Seal",
@@ -880,7 +880,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Whistle' low?",
+      "Question": "Which animal says 'Whistle'?",
       "OptionA": "Dolphin",
       "OptionB": "Whale",
       "OptionC": "Seal",
@@ -890,7 +890,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Trumpet' softly?",
+      "Question": "Which animal says 'Trumpet'?",
       "OptionA": "Swan",
       "OptionB": "Crane",
       "OptionC": "Goose",
@@ -900,7 +900,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Bugle' loudly?",
+      "Question": "Which animal says 'Bugle'?",
       "OptionA": "Elk",
       "OptionB": "Deer",
       "OptionC": "Moose",
@@ -910,7 +910,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Bellow' deeply?",
+      "Question": "Which animal says 'Bellow'?",
       "OptionA": "Cow",
       "OptionB": "Bull",
       "OptionC": "Alligator",
@@ -920,7 +920,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Roar' softly?",
+      "Question": "Which animal says 'Roar'?",
       "OptionA": "Lion cub",
       "OptionB": "Tiger cub",
       "OptionC": "Bear cub",
@@ -930,7 +930,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Purr' loudly?",
+      "Question": "Which animal says 'Purr'?",
       "OptionA": "House cat",
       "OptionB": "Tiger",
       "OptionC": "Lion",
@@ -960,7 +960,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Snap' viciously?",
+      "Question": "Which animal says 'Snap' ?",
       "OptionA": "Crocodile",
       "OptionB": "Alligator",
       "OptionC": "Caiman",
@@ -1010,7 +1010,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Gnaw' loudly?",
+      "Question": "Which animal says 'Gnaw' ?",
       "OptionA": "Beaver",
       "OptionB": "Rat",
       "OptionC": "Porcupine",
@@ -1020,7 +1020,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Chew' noisily?",
+      "Question": "Which animal says 'Chew'?",
       "OptionA": "Cow",
       "OptionB": "Horse",
       "OptionC": "Camel",
@@ -1070,7 +1070,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Scurry' quickly?",
+      "Question": "Which animal says 'Scurry'?",
       "OptionA": "Mouse",
       "OptionB": "Rat",
       "OptionC": "Squirrel",
@@ -1561,7 +1561,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Bellow' loudly?",
+      "Question": "Which animal says 'Bellow'?",
       "OptionA": "Cow",
       "OptionB": "Elephant",
       "OptionC": "Rhino",
@@ -1811,7 +1811,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Screech' loudly?",
+      "Question": "Which animal says 'Screech' ?",
       "OptionA": "Owl",
       "OptionB": "Hawk",
       "OptionC": "Monkey",
@@ -1901,7 +1901,7 @@
       "Subject": "Sound"
     },
     {
-      "Question": "Which animal says 'Honk' aggressively?",
+      "Question": "Which animal says 'Honk' ?",
       "OptionA": "Duck",
       "OptionB": "Swan",
       "OptionC": "Goose",

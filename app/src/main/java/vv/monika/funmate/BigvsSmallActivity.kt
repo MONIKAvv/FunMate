@@ -20,7 +20,7 @@ class BigvsSmallActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBigvsSmallBinding
     private var isHintVisible = false
 
-    private val totalQuestions = 50
+    private val totalQuestions = 100
     private var currentIndex = 0
     private var score = 0
     private var hasAnswered = false
@@ -61,7 +61,7 @@ class BigvsSmallActivity : AppCompatActivity() {
         binding.optionD.text = q.options[3].toString()
 
         setOptionsEnabled(true)
-        binding.currentQue.text = "${currentIndex + 1}/$totalQuestions"
+        binding.currentQue.text = "${currentIndex}/$totalQuestions"
         binding.totalCoin.text = "$score"
     }
 
@@ -167,14 +167,25 @@ class BigvsSmallActivity : AppCompatActivity() {
         setOptionsEnabled(false)
 
         val isCorrect = index == currentQuestion.correctIndex
-        if (isCorrect) score++
+        if (isCorrect) {
+            score++
+        }
+
 
         CustomAlert.showCustomAlert(
             context = this,
             type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
             title = if (isCorrect) "Correct! 🎉" else "Wrong Answer ❌",
             description = if (isCorrect) "Well done!" else "Try again!",
-            onNextClick = { loadNextQuestion() },
+            onNextClick = {  Congrats.showCongratsAlert(
+                context = this,
+                onClaimClick = {
+                    // Back to MathActivity → load next question
+                    hasAnswered = false
+                    setOptionsEnabled(true)
+                    loadNextQuestion()
+                }
+            ) },
             onCloseClick = {
                 hasAnswered = false
                 setOptionsEnabled(true)
@@ -225,7 +236,7 @@ class BigvsSmallActivity : AppCompatActivity() {
         binding.questionTextview.text = "Finished!"
         CustomAlert.showCustomAlert(
             context = this,
-            type = AlertType.CORRECT,
+            type = AlertType.CONGRATULATION,
             title = "Quiz Finished 🎉",
             description = "Your final score: $score / $totalQuestions",
             onNextClick = { finish() }

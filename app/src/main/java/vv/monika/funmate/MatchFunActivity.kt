@@ -11,7 +11,7 @@ import kotlin.random.Random
 class MatchFunActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMatchFunBinding
 
-    private val totalQuestions = 50
+    private val totalQuestions = 100
     private var currentIndex = 0
     private var score = 0
     private var hasAnswered = false
@@ -71,7 +71,7 @@ class MatchFunActivity : AppCompatActivity() {
         clearOptionStyles()
 
         // Progress
-        binding.currentQue.text = "${currentIndex + 1} / $totalQuestions"
+        binding.currentQue.text = "${currentIndex} / $totalQuestions"
         binding.totalCoin.text = "$score"
     }
 
@@ -100,7 +100,10 @@ class MatchFunActivity : AppCompatActivity() {
         setOptionsEnabled(false)
 
         val isCorrect = index == currentQuestion.correctIndex
-        if (isCorrect) score++
+        if (isCorrect) {
+            score++
+
+        }
         markCorrectWrong(index)
 
         // If you have a custom dialog util, use it. Otherwise a simple Toast works.
@@ -109,7 +112,15 @@ class MatchFunActivity : AppCompatActivity() {
             type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
             title = if (isCorrect) "Correct!" else "Wrong Answer",
             description = if (isCorrect) "Well done! 🎉" else "Try again! 💪",
-            onNextClick = { loadNextQuestion() },
+            onNextClick = {  Congrats.showCongratsAlert(
+                context = this,
+                onClaimClick = {
+                    // Back to MathActivity → load next question
+                    hasAnswered = false
+                    setOptionsEnabled(true)
+                    loadNextQuestion()
+                }
+            ) },
             onCloseClick = {
                 hasAnswered = false
                 setOptionsEnabled(true)
@@ -145,7 +156,7 @@ class MatchFunActivity : AppCompatActivity() {
         binding.questionTextview.text = "Finished!"
        CustomAlert.showCustomAlert(
                 context = this,
-                type = AlertType.CORRECT,
+                type = AlertType.CONGRATULATION,
                 title = "Quiz Finished 🎉",
                 description = "Your final score: $score / $totalQuestions",
                 onNextClick = { finish() }

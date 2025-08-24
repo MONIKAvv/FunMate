@@ -3,6 +3,7 @@ package vv.monika.funmate
 import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -34,6 +35,12 @@ object CustomAlert {
         // Set values
         textTitle.text = title
         message.text = description
+
+        if (type == AlertType.WRONG || type == AlertType.CONGRATULATION) {
+            nextBtn.visibility = View.GONE
+        } else {
+            nextBtn.visibility = View.VISIBLE
+        }
 
         when (type) {
             AlertType.WRONG -> icon.setImageResource(R.drawable.wrong_icon)

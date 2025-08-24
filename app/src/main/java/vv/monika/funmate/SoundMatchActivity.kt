@@ -15,6 +15,7 @@ class SoundMatchActivity : AppCompatActivity() {
     private val vm: QuestionDeckViewModel by viewModels()
     private var isHintVisible = false
     private var score = 0
+    private var hasAnswered = false
     private var currentQuestion: QuestionsItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,13 +42,14 @@ class SoundMatchActivity : AppCompatActivity() {
             binding.questionTextview.text = "Finished!"
             CustomAlert.showCustomAlert(
                 context = this,
-                type = AlertType.CORRECT,
+                type = AlertType.CONGRATULATION,
                 title = "Completed!",
                 description = "Your score: $score / ${vm.progress().second}",
                 onNextClick = { finish() }
             )
             return
         }
+        hasAnswered = false
         currentQuestion = q as QuestionsItem?
 
         binding.questionTextview.text = q.Question
@@ -61,6 +63,7 @@ class SoundMatchActivity : AppCompatActivity() {
         binding.totalQue.text = total.toString()
         binding.totalCoin.text = score.toString()
         binding.hintBubble.text = q.Hint ?: ""
+        setOptionsEnabled(true)
 
     }
 
@@ -75,18 +78,34 @@ class SoundMatchActivity : AppCompatActivity() {
         binding.optionD.setOnClickListener { selectOption("D") }
 
     }
+    private fun setOptionsEnabled(enabled: Boolean) {
+        binding.optionA.isEnabled = enabled
+        binding.optionB.isEnabled = enabled
+        binding.optionC.isEnabled = enabled
+        binding.optionD.isEnabled = enabled
+    }
 
     private fun selectOption(index: String) {
         val q = currentQuestion ?: return
         val correct = q.AnswerIndex
         val isCorrect = (index == correct)
-        if (isCorrect) score++
+        if (isCorrect) {
+            score++
+        }
         CustomAlert.showCustomAlert(
             context = this,
             type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
             title = if (isCorrect) "Correct! 🎉" else "Wrong Answer ❌",
             description = if (isCorrect) "Well done!" else "Correct was: $correct",
-            onNextClick = { loadNextQuestion() },
+            onNextClick = {  Congrats.showCongratsAlert(
+                context = this,
+                onClaimClick = {
+                    // Back to MathActivity → load next question
+                    hasAnswered = false
+                    setOptionsEnabled(true)
+                    loadNextQuestion()
+                }
+            ) },
             onCloseClick = {
 //                apply has answered things
             }
