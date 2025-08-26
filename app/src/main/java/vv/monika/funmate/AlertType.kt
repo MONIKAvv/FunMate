@@ -4,6 +4,7 @@ enum class AlertType {
     WRONG,
     CORRECT,
     APPROVAL,
-    CONGRATULATION
+    CONGRATULATION,
+    START
 
 }

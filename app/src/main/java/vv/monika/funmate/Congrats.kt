@@ -13,7 +13,8 @@ object Congrats {
 
     fun showCongratsAlert(
         context: Context,
-        onClaimClick: (() -> Unit)? = null
+        onClaimClick: (() -> Unit)? = null,
+        CountDownTimer: Int
     ) {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.congrats, null)
         val dialogBuilder = AlertDialog.Builder(context).setView(dialogView).setCancelable(false)
@@ -30,9 +31,10 @@ object Congrats {
 
         // Initially hide claim button until timer finishes
         claimButton.visibility = android.view.View.GONE
+        var isTimerFinished = false
 
         // Countdown 3 seconds
-        object : CountDownTimer(10000, 1000) {
+        object : CountDownTimer(CountDownTimer.toLong(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsLeft = millisUntilFinished / 1000
                 timerText.text = "$secondsLeft"
@@ -49,5 +51,16 @@ object Congrats {
             alertDialog.dismiss()
             onClaimClick?.invoke()
         }
+
+
+    }
+
+    //    handle back press
+    private fun showFailedAlert(context: Context) {
+        AlertDialog.Builder(context)
+            .setTitle("Failed")
+            .setMessage("You exited before the timer finished!")
+            .setPositiveButton("OK", null)
+            .show()
     }
 }

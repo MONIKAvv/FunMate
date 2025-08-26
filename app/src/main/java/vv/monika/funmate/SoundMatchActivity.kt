@@ -104,7 +104,7 @@ class SoundMatchActivity : AppCompatActivity() {
                     hasAnswered = false
                     setOptionsEnabled(true)
                     loadNextQuestion()
-                }
+                },10000
             ) },
             onCloseClick = {
 //                apply has answered things

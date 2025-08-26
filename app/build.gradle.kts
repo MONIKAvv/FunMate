@@ -95,4 +95,7 @@ dependencies {
 
     implementation ("com.google.code.gson:gson:2.10.1")
 
+//    dependencies for custom tab
+    implementation ("androidx.browser:browser:1.5.0")
+
 }

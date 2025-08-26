@@ -120,6 +120,9 @@ class MainActivity : AppCompatActivity() {
                 true
             }R.id.listFragment -> {
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_view, ListFragment()).commit()
+//                open side bar
+                drawerLayout.openDrawer(GravityCompat.START)
+
                 true
             }
 
@@ -130,9 +133,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Open Drawer when clicking menu icon
-        binding.navDrawerButton.setOnClickListener {
-            drawerLayout.openDrawer(GravityCompat.START)
-        }
+//        binding.navDrawerButton.setOnClickListener {
+//
+//        }
 
 
 

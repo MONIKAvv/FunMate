@@ -119,7 +119,8 @@ class MatchFunActivity : AppCompatActivity() {
                     hasAnswered = false
                     setOptionsEnabled(true)
                     loadNextQuestion()
-                }
+                },
+                10000
             ) },
             onCloseClick = {
                 hasAnswered = false
