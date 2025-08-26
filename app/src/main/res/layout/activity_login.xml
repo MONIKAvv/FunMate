@@ -118,12 +118,12 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins"
         android:paddingStart="10dp"
-        android:text="I agree to the Privacy Policy and \n Terms of Service "
-        android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="14sp"
+        android:text="I agree to the Privacy Policy and Terms of Services "
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/checkBox"
         app:layout_constraintStart_toEndOf="@+id/checkBox"
         app:layout_constraintTop_toTopOf="@+id/checkBox" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

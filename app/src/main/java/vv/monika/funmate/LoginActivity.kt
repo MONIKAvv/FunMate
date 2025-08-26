@@ -17,10 +17,6 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.termsAndCondition.text = Html.fromHtml(
-            "<font color='#888888'>I agree to the </font><b><font color='#FFFFFF'>Privacy Policy </font></b><font color='#888888'>and </font><b><font color='#FFFFFF'>Terms of Services</font></b>"
-
-        )
         binding.continueButton.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
