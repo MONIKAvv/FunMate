@@ -30,7 +30,7 @@ object CustomAlert {
         val textTitle = dialogView.findViewById<TextView>(R.id.alert_title)
         val message = dialogView.findViewById<TextView>(R.id.alert_description)
         val closeBtn = dialogView.findViewById<ImageView>(R.id.close_alert)
-        val nextBtn = dialogView.findViewById<Button>(R.id.next_que)
+        val nextBtn = dialogView.findViewById<Button>(R.id.next_btn)
 
         // Set values
         textTitle.text = title

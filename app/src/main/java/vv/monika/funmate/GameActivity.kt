@@ -1,5 +1,6 @@
 package vv.monika.funmate
 
+import android.app.ActivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
@@ -25,6 +26,10 @@ class GameActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.backButton.setOnClickListener {
             finish()
+        }
+        fun onResume() {
+            super.onResume()
+            GameNotifier.dismissAll()
         }
 
 //dummy data
@@ -58,11 +63,15 @@ class GameActivity : AppCompatActivity() {
             Toast.makeText(this, "Clicked ${item.title}", Toast.LENGTH_SHORT).show()
 //             open game / start activity / show more info custom tab open
 
-            Congrats.showCongratsAlert(
+            GameNotifier.showNotification(
                 this,
-                onClaimClick = { openCustomTab(item.url)},
+                AlertType.START,
+                "Running",
+                "Please wait for timer to out",
+                onClaimClick = { openCustomTab(item.url) },
                 30000
             )
+
 
         }
 
@@ -78,4 +87,10 @@ class GameActivity : AppCompatActivity() {
 
         customTabsIntent.launchUrl(this, Uri.parse(url))
     }
+
+    override fun onResume() {
+        super.onResume()
+        GameNotifier.dismissAll()
+    }
+
 }

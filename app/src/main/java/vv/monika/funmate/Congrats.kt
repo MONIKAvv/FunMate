@@ -55,12 +55,5 @@ object Congrats {
 
     }
 
-    //    handle back press
-    private fun showFailedAlert(context: Context) {
-        AlertDialog.Builder(context)
-            .setTitle("Failed")
-            .setMessage("You exited before the timer finished!")
-            .setPositiveButton("OK", null)
-            .show()
-    }
+
 }
