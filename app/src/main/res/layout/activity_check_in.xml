@@ -272,7 +272,7 @@
         app:srcCompat="@drawable/square_gray_bg" />
 
     <ImageView
-        android:id="@+id/imageView31"
+        android:id="@+id/left_radeem_open_drawer"
         android:layout_width="110dp"
         android:layout_height="80dp"
         android:layout_marginStart="-25dp"

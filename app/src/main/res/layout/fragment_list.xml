@@ -78,7 +78,7 @@
         app:layout_constraintTop_toTopOf="@+id/textView6" />
 
     <ImageView
-        android:id="@+id/imageView31"
+        android:id="@+id/left_radeem_open_drawer"
         android:layout_width="349dp"
         android:layout_height="142dp"
         android:layout_marginStart="8dp"
@@ -94,7 +94,7 @@
         android:layout_marginEnd="8dp"
         android:src="@drawable/right_radeem"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView31" />
+        app:layout_constraintTop_toTopOf="@+id/left_radeem_open_drawer" />
 
     <ImageView
         android:id="@+id/imageView33"
@@ -102,8 +102,8 @@
         android:layout_height="142dp"
         android:layout_marginTop="8dp"
         android:src="@drawable/left_radeem"
-        app:layout_constraintStart_toStartOf="@+id/imageView31"
-        app:layout_constraintTop_toBottomOf="@+id/imageView31" />
+        app:layout_constraintStart_toStartOf="@+id/left_radeem_open_drawer"
+        app:layout_constraintTop_toBottomOf="@+id/left_radeem_open_drawer" />
 
     <ImageView
         android:id="@+id/imageView34"

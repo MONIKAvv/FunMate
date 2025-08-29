@@ -36,7 +36,7 @@ import vv.monika.funmate.databinding.VpnDetectedBinding
 import vv.monika.funmate.fragment.HomeFragment
 import vv.monika.funmate.fragment.ListFragment
 import vv.monika.funmate.fragment.RecentFragment
-import vv.monika.funmate.fragment.walletFragment
+import vv.monika.funmate.fragment.WalletFragment
 import vv.monika.funmate.ui.theme.FunMateTheme
 
 class MainActivity : AppCompatActivity() {
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }R.id.walletFragment -> {
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_view,
-                    walletFragment()).commit()
+                    WalletFragment()).commit()
                 true
             }R.id.listFragment -> {
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_view, ListFragment()).commit()

@@ -18,6 +18,7 @@ import vv.monika.funmate.model.GameItem
 class GameActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGameBinding
+    private var score = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,10 +28,8 @@ class GameActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener {
             finish()
         }
-        fun onResume() {
-            super.onResume()
-            GameNotifier.dismissAll()
-        }
+
+
 
 //dummy data
         val data = listOf(
@@ -68,9 +67,12 @@ class GameActivity : AppCompatActivity() {
                 AlertType.START,
                 "Running",
                 "Please wait for timer to out",
-                onClaimClick = { openCustomTab(item.url) },
+                onClaimClick = { openCustomTab(item.url)
+                    score += 10   // ✅ add coins only when tab opens after timer
+                    binding.totalCoin.text = "$score" },
                 30000
             )
+
 
 
         }
@@ -86,11 +88,13 @@ class GameActivity : AppCompatActivity() {
             .build()
 
         customTabsIntent.launchUrl(this, Uri.parse(url))
+//        score = score+10
     }
 
     override fun onResume() {
         super.onResume()
         GameNotifier.dismissAll()
+        binding.totalCoin.text ="$score"
     }
 
 }
