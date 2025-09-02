@@ -60,6 +60,7 @@ class GameActivity : AppCompatActivity() {
         )
         binding.gameRecyclerView.adapter = GameAdapter(data) { item ->
             Toast.makeText(this, "Clicked ${item.title}", Toast.LENGTH_SHORT).show()
+            binding.totalCoin.text = "$score"
 //             open game / start activity / show more info custom tab open
 
             GameNotifier.showNotification(
@@ -69,7 +70,7 @@ class GameActivity : AppCompatActivity() {
                 "Please wait for timer to out",
                 onClaimClick = { openCustomTab(item.url)
                     score += 10   // ✅ add coins only when tab opens after timer
-                    binding.totalCoin.text = "$score" },
+                   },
                 30000
             )
 
