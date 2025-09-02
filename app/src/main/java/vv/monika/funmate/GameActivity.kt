@@ -19,67 +19,80 @@ class GameActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGameBinding
     private var score = 0
+    private var gameStartTime: Long = 0L
+    private var isGameRunning = false
+
+    companion object {
+        private const val GAME_TIMER_DURATION = 30000L // 30 seconds
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.backButton.setOnClickListener {
-            finish()
-        }
 
+        binding.backButton.setOnClickListener { finish() }
 
+        val data = getDummyGames()
+        setupRecyclerView(data)
+    }
 
-//dummy data
-        val data = listOf(
-            GameItem(1, "Stumble Guys", R.drawable.gameimage1, "https://www.stumbleguys.com/"),
-            GameItem(2, "Minecraft", R.drawable.minecraft, "https://www.minecraft.net/"),
-            GameItem(3, "Free Fire", R.drawable.gameimage1, "https://ff.garena.com/"),
-            GameItem(4, "Among Us", R.drawable.minecraft, "https://innersloth.com/gameAmongUs.php"),
+    private fun getDummyGames() = listOf(
+        GameItem(1, "Stumble Guys", R.drawable.gameimage1, "https://www.stumbleguys.com/"),
+        GameItem(2, "Minecraft", R.drawable.minecraft, "https://www.minecraft.net/"),
+        GameItem(3, "Free Fire", R.drawable.gameimage1, "https://ff.garena.com/"),
+        GameItem(4, "Among Us", R.drawable.minecraft, "https://innersloth.com/gameAmongUs.php"),
+        GameItem(5, "Minecraft", R.drawable.minecraft, "https://www.minecraft.net/"),
+        GameItem(6, "Free Fire", R.drawable.gameimage1, "https://ff.garena.com/"),
+        GameItem(7, "Among Us", R.drawable.minecraft, "https://innersloth.com/gameAmongUs.php"),
+        GameItem(8, "Stumble Guys", R.drawable.gameimage1, "https://www.stumbleguys.com/")
+    )
 
-            GameItem(5, "Minecraft", R.drawable.minecraft, "https://www.minecraft.net/"),
-            GameItem(6, "Free Fire", R.drawable.gameimage1, "https://ff.garena.com/"),
-            GameItem(7, "Among Us", R.drawable.minecraft, "https://innersloth.com/gameAmongUs.php"),
-            GameItem(8, "Stumble Guys", R.drawable.gameimage1, "https://www.stumbleguys.com/"),
-
-
-            )
+    private fun setupRecyclerView(data: List<GameItem>) {
         val spanCount = 2
-        val spacingPx =
-            resources.getDimensionPixelSize(R.dimen.grid_spacing) // define in dimens.xml or use dp->px
+        val spacingPx = resources.getDimensionPixelSize(R.dimen.grid_spacing)
 
-        val layoutManager = GridLayoutManager(this, spanCount)
-        binding.gameRecyclerView.layoutManager = layoutManager
-        binding.gameRecyclerView.addItemDecoration(
-            GridSpacingItemDecoration(
-                spanCount,
-                spacingPx,
-                true
-            )
-        )
-        binding.gameRecyclerView.adapter = GameAdapter(data) { item ->
-            Toast.makeText(this, "Clicked ${item.title}", Toast.LENGTH_SHORT).show()
-            binding.totalCoin.text = "$score"
-//             open game / start activity / show more info custom tab open
-
-            GameNotifier.showNotification(
-                this,
-                AlertType.START,
-                "Running",
-                "Please wait for timer to out",
-                onClaimClick = { openCustomTab(item.url)
-                    score += 10   // ✅ add coins only when tab opens after timer
-                   },
-                30000
-            )
-
-
-
+        binding.gameRecyclerView.apply {
+            layoutManager = GridLayoutManager(this@GameActivity, spanCount)
+            addItemDecoration(GridSpacingItemDecoration(spanCount, spacingPx, true))
+            adapter = GameAdapter(data) { item -> handleGameClick(item) }
         }
+    }
 
-        binding.backButton.setOnClickListener {
-            finish()
+    private fun handleGameClick(item: GameItem) {
+        Toast.makeText(this, "Clicked ${item.title}", Toast.LENGTH_SHORT).show()
+        binding.totalCoin.text = "$score"
+
+        // Track when user starts playing
+        gameStartTime = System.currentTimeMillis()
+        isGameRunning = true
+
+        openCustomTab(item.url)
+
+        GameNotifier.showNotification(
+            context = this,
+            type = AlertType.START,
+            title = "Running",
+            description = "Please wait for the timer to finish",
+            onClaimClick = {
+                score += 10
+                binding.totalCoin.text = "$score"
+                isGameRunning = false
+            },
+            countDownTimer = GAME_TIMER_DURATION.toInt()
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isGameRunning) {
+            val elapsedTime = System.currentTimeMillis() - gameStartTime
+            if (elapsedTime < GAME_TIMER_DURATION) {
+                // User returned too early -> mark as failed
+                GameNotifier.failEarly()
+                isGameRunning = false
+            }
         }
     }
 
@@ -87,15 +100,7 @@ class GameActivity : AppCompatActivity() {
         val customTabsIntent = CustomTabsIntent.Builder()
             .setShowTitle(true)
             .build()
-
         customTabsIntent.launchUrl(this, Uri.parse(url))
-//        score = score+10
     }
-
-    override fun onResume() {
-        super.onResume()
-        GameNotifier.dismissAll()
-        binding.totalCoin.text ="$score"
-    }
-
 }
+

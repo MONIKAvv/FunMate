@@ -12,6 +12,12 @@ import androidx.compose.foundation.layout.Row
 
 object GameNotifier {
     private var currentDialog: AlertDialog? = null
+    private var titleView: TextView? = null
+    private var messageView: TextView? = null
+    private var iconView: ImageView? = null
+    private var claimButton: Button? = null
+    private var timerText: TextView? = null
+
     fun showNotification(
         context: Context,
         type: AlertType,
@@ -21,79 +27,81 @@ object GameNotifier {
         countDownTimer: Int
     ) {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.game_notifier, null)
-        val dialogBuilder = AlertDialog.Builder(context).setView(dialogView).setCancelable(false)
+        val dialog = AlertDialog.Builder(context).setView(dialogView).setCancelable(false).create()
+        currentDialog = dialog
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.show()
 
-        val alertDialog = dialogBuilder.create()
-        currentDialog = alertDialog
-        alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        alertDialog.show()
+        titleView = dialogView.findViewById(R.id.notification_title)
+        messageView = dialogView.findViewById(R.id.notification_description)
+        iconView = dialogView.findViewById(R.id.noticifacation_icon)
+        claimButton = dialogView.findViewById(R.id.claim_btn)
+        timerText = dialogView.findViewById(R.id.timer_text)
 
-        val timerText = dialogView.findViewById<TextView>(R.id.timer_text)
-        val claimButton = dialogView.findViewById<Button>(R.id.claim_btn)
-        val titleView = dialogView.findViewById<TextView>(R.id.notification_title)
-        val icon = dialogView.findViewById<ImageView>(R.id.noticifacation_icon)
         val closeBtn = dialogView.findViewById<ImageView>(R.id.close_notification)
-        val message = dialogView.findViewById<TextView>(R.id.notification_description)
 
-        titleView.text = title
-        message.text = description
+        titleView?.text = title
+        messageView?.text = description
+        claimButton?.visibility = View.GONE
 
-
-        claimButton.visibility = android.view.View.GONE
         var isTimerFinished = false
 
-        object : CountDownTimer(countDownTimer.toLong(), 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val secondsLeft = millisUntilFinished / 1000
-                timerText.text = "$secondsLeft"
-            }
-
-            override fun onFinish() {
-                isTimerFinished = true
-                timerText.visibility = android.view.View.GONE
-                claimButton.visibility = android.view.View.VISIBLE
-            }
-        }.start()
-        claimButton.setOnClickListener {
-            if (isTimerFinished) {
-                message.text = "Now you can Claim"
-                alertDialog.dismiss()
-                onClaimClick?.invoke()
-            } else {
-                titleView.text = "Failed!"
-                message.text = "You tried to claim before the timer finished."
-                icon.setImageResource(R.drawable.wrong_icon)
-
-                // Disable claim button after failed
-                claimButton.visibility = android.view.View.GONE
-                timerText.visibility = android.view.View.GONE
-            }
+        startTimer(countDownTimer, timerText!!) {
+            isTimerFinished = true
+            titleView?.text = "You Ready to Go!"
+            messageView?.text = "Now you can Claim"
+            timerText?.visibility = View.GONE
+            claimButton?.visibility = View.VISIBLE
         }
 
-        when (type) {
-            AlertType.WRONG -> icon.setImageResource(R.drawable.wrong_icon)
-            AlertType.CORRECT -> icon.setImageResource(R.drawable.correct_icon)
-            AlertType.START -> icon.setImageResource(R.drawable.correct_icon)
-            AlertType.APPROVAL -> icon.setImageResource(R.drawable.correct_icon)
-            AlertType.CONGRATULATION -> icon.setImageResource(R.drawable.correct_icon)
+        claimButton?.setOnClickListener {
+            if (isTimerFinished) {
+                dialog.dismiss()
+                onClaimClick?.invoke()
+            } else {
+                showFailedState()
+            }
         }
 
         closeBtn.setOnClickListener {
-            if (titleView.text == "Failed!") {
-                // Second click → dismiss dialog
-                alertDialog.dismiss()
-            } else {
-                // First click → show failed message
-                titleView.text = "Failed!"
-                message.text = "You tried to claim before the timer finished."
-                icon.setImageResource(R.drawable.wrong_icon)
-
-                // Disable claim button after failed
-
-                timerText.visibility = View.GONE
-            }
+            if (titleView?.text == "Failed!") dialog.dismiss() else showFailedState()
         }
 
+        setIcon(type, iconView!!)
+    }
+
+    private fun startTimer(duration: Int, timerText: TextView, onFinish: () -> Unit) {
+        object : CountDownTimer(duration.toLong(), 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                timerText.text = "${millisUntilFinished / 1000}"
+            }
+            override fun onFinish() = onFinish()
+        }.start()
+    }
+
+    private fun showFailedState() {
+        titleView?.text = "Failed!"
+        messageView?.text = "You tried to claim before the timer finished."
+        iconView?.setImageResource(R.drawable.wrong_icon)
+        claimButton?.visibility = View.GONE
+        timerText?.visibility = View.GONE
+    }
+
+    fun failEarly() {
+        if (currentDialog?.isShowing == true) {
+            showFailedState()
+        }
+    }
+
+    private fun setIcon(type: AlertType, icon: ImageView) {
+        val iconMap = mapOf(
+            AlertType.WRONG to R.drawable.wrong_icon,
+            AlertType.CORRECT to R.drawable.correct_icon,
+            AlertType.START to R.drawable.correct_icon,
+            AlertType.APPROVAL to R.drawable.correct_icon,
+            AlertType.CONGRATULATION to R.drawable.correct_icon
+        )
+        icon.setImageResource(iconMap[type] ?: R.drawable.correct_icon)
     }
 
     fun dismissAll() {
@@ -101,3 +109,4 @@ object GameNotifier {
         currentDialog = null
     }
 }
+
