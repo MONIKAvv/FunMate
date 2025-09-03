@@ -53,78 +53,102 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = binding.drawerLayout
         bottomNavigationView = binding.bottomNavigationView
 
-      binding.sideNavView.setNavigationItemSelectedListener { menuItem ->
-          when( menuItem.itemId) {
-              R.id.nav_home -> {
-                  supportFragmentManager.beginTransaction()
-                      .replace(R.id.fragment_view, HomeFragment())
-                      .commit()
+        binding.sideNavView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_home -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_view, HomeFragment())
+                        .commit()
 
-              }
-              R.id.nav_setting -> {
-                  Toast.makeText(this, "Setting Clicked", Toast.LENGTH_SHORT).show()
-                  true
-              } R.id.nav_redeem -> {
-             startActivity(Intent(this, RadeemCodeActivity::class.java))
-              }
-              R.id.nav_history -> {
-                  supportFragmentManager.beginTransaction()
-                      .replace(R.id.fragment_view, RecentFragment())
-                      .commit()
-              } R.id.nav_telegram -> {
-              Toast.makeText(this, "telegram Clicked", Toast.LENGTH_SHORT).show()
-                  true
-              }
-              R.id.nav_rating -> {
-                  Toast.makeText(this, "Rating Clicked", Toast.LENGTH_SHORT).show()
-                  true
-              } R.id.nav_share -> {
-             startActivity(Intent(this, InviteActivity::class.java))
-              }
-              R.id.nav_email -> {
-                  Toast.makeText(this, "Email Clicked", Toast.LENGTH_SHORT).show()
-                  true
-              } R.id.nav_delete_acc -> {
-              Toast.makeText(this, "Delete Clicked", Toast.LENGTH_SHORT).show()
-              true
-          }R.id.nav_logout -> {
-              Toast.makeText(this, "Logout Clicked", Toast.LENGTH_SHORT).show()
-              true
-          }
-              else -> false
-      }
-          drawerLayout.closeDrawer(GravityCompat.START)
-          true
+                }
 
-      }
+                R.id.nav_setting -> {
+                    Toast.makeText(this, "Setting Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
 
+                R.id.nav_redeem -> {
+                    startActivity(Intent(this, RadeemCodeActivity::class.java))
+                }
 
+                R.id.nav_history -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_view, RecentFragment())
+                        .commit()
+                }
 
+                R.id.nav_telegram -> {
+                    Toast.makeText(this, "telegram Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
 
-//        show shome fragment by default
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_view, HomeFragment()).commit()
+                R.id.nav_rating -> {
+                    Toast.makeText(this, "Rating Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+
+                R.id.nav_share -> {
+                    startActivity(Intent(this, InviteActivity::class.java))
+                }
+
+                R.id.nav_email -> {
+                    Toast.makeText(this, "Email Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+
+                R.id.nav_delete_acc -> {
+                    Toast.makeText(this, "Delete Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+
+                R.id.nav_logout -> {
+                    Toast.makeText(this, "Logout Clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+
+                else -> false
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+         true
+
+        }
+
+//set home fragment as default
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_view, HomeFragment())
+            .commit()
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            when(item.itemId){
+            when (item.itemId) {
                 R.id.homeFragment -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.fragment_view,
-                        HomeFragment()).commit()
+                    supportFragmentManager.beginTransaction().replace(
+                        R.id.fragment_view,
+                        HomeFragment()
+                    ).commit()
                     true
 
-                }R.id.recentFragment -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.fragment_view,
-                        RecentFragment()).commit()
-                true
-            }R.id.walletFragment -> {
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_view,
-                    WalletFragment()).commit()
-                true
-            }R.id.listFragment -> {
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_view, ListFragment()).commit()
-//                open side bar
-                drawerLayout.openDrawer(GravityCompat.START)
+                }
 
-                true
-            }
+                R.id.recentFragment -> {
+                    supportFragmentManager.beginTransaction().replace(
+                        R.id.fragment_view,
+                        RecentFragment()
+                    ).commit()
+                    true
+                }
+
+                R.id.walletFragment -> {
+                    supportFragmentManager.beginTransaction().replace(
+                        R.id.fragment_view,
+                        WalletFragment()
+                    ).commit()
+                    true
+                }
+
+                R.id.listFragment -> {
+//                supportFragmentManager.beginTransaction().replace(R.id.fragment_view, ListFragment()).commit()
+//                open side bar
+                    drawerLayout.openDrawer(GravityCompat.START)
+                    true
+                }
 
                 else -> false
 
@@ -138,9 +162,7 @@ class MainActivity : AppCompatActivity() {
 //        }
 
 
-
     }
-
 
 
 }

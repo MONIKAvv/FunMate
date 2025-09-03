@@ -48,12 +48,13 @@
     <!-- Side Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/side_nav_view"
-        android:layout_width="300dp"
-        android:layout_height="750dp"
+        android:layout_width="670dp"
+        android:layout_height="800dp"
+        android:layout_marginStart="30dp"
         android:layout_gravity="start"
         android:background="@drawable/drawer_bg"
         app:headerLayout="@layout/drawer_header"
-        app:itemIconPadding="20dp"
+        app:itemIconPadding="30dp"
         app:itemTextColor="@color/white"
         app:menu="@menu/drawer_menu_item">
 

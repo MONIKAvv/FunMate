@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import vv.monika.funmate.databinding.ActivityRadeemCodeBinding
 import vv.monika.funmate.databinding.FragmentWalletBinding
+import vv.monika.funmate.walletRadeemActivity
 
 class WalletFragment : Fragment() {
 
@@ -24,39 +25,47 @@ class WalletFragment : Fragment() {
 
         // ✅ Amazon Pay
         binding.amazonPay.setOnClickListener {
-            openApp("in.amazon.mShop.android.shopping", "Amazon Pay is not installed")
+//            openApp("in.amazon.mShop.android.shopping", "Amazon Pay is not installed")
+            startActivity(Intent(context, walletRadeemActivity::class.java))
         }
 
         // ✅ Google Pay
         binding.googlePay.setOnClickListener {
 //            openApp("com.google.android.apps.nbu.paisa.user", "Google Pay is not installed")
-            val gpayIntent = Intent(Intent.ACTION_VIEW)
-            gpayIntent.data = Uri.parse("upi://pay?pa=merchant@upi&pn=Merchant&am=100&cu=INR")
-            gpayIntent.setPackage("com.google.android.apps.nbu.paisa.user") // Force Google Pay
+//            val gpayIntent = Intent(Intent.ACTION_VIEW)
+//            gpayIntent.data = Uri.parse("upi://pay?pa=merchant@upi&pn=Merchant&am=100&cu=INR")
+//            gpayIntent.setPackage("com.google.android.apps.nbu.paisa.user") // Force Google Pay
+//
+//            try {
+//                startActivity(gpayIntent)
+//            } catch (e: Exception) {
+//                Toast.makeText(requireContext(), "Google Pay not installed", Toast.LENGTH_SHORT).show()
+//            }
 
-            try {
-                startActivity(gpayIntent)
-            } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Google Pay not installed", Toast.LENGTH_SHORT).show()
-            }
+            startActivity(Intent(context, walletRadeemActivity::class.java))
+
 
         }
 
         // ✅ Flipkart Pay (part of Flipkart app)
         binding.flipkartPay.setOnClickListener {
-            openApp("com.flipkart.android", "Flipkart app is not installed")
+//            openApp("com.flipkart.android", "Flipkart app is not installed")
+            startActivity(Intent(context, walletRadeemActivity::class.java))
         }
 
         // ✅ UPI Pay (Generic UPI Chooser)
         binding.upiPay.setOnClickListener {
-            val uri = android.net.Uri.parse(
-                "upi://pay?pa=merchant@upi&pn=Merchant&am=100&cu=INR"
-            )
-            val intent = Intent(Intent.ACTION_VIEW, uri)
+//            val uri = android.net.Uri.parse(
+//                "upi://pay?pa=merchant@upi&pn=Merchant&am=100&cu=INR"
+//            )
+//            val intent = Intent(Intent.ACTION_VIEW, uri)
+//
+//            // Always show chooser
+//            val chooser = Intent.createChooser(intent, "Pay with any UPI app")
+//            startActivity(chooser)
 
-            // Always show chooser
-            val chooser = Intent.createChooser(intent, "Pay with any UPI app")
-            startActivity(chooser)
+       startActivity(Intent(context, walletRadeemActivity::class.java))
+
         }
 
 

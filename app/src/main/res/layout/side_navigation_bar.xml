@@ -10,10 +10,11 @@
     tools:openDrawer="start">
 
     <com.google.android.material.navigation.NavigationView
-        android:layout_width="300dp"
-        android:layout_height="750dp"
+        android:layout_width="670dp"
+        android:layout_height="800dp"
         android:layout_gravity="start"
-        app:itemIconPadding="20dp"
+        android:layout_marginStart="50dp"
+        app:itemIconPadding="30dp"
         android:background="@drawable/drawer_bg"
         app:itemTextColor="@color/white"
         app:menu="@menu/drawer_menu_item"
