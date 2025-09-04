@@ -3,17 +3,20 @@ package vv.monika.funmate
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import vv.monika.funmate.data.MathsQuestion
 import vv.monika.funmate.databinding.ActivityMatchFunBinding
+import vv.monika.funmate.model.ScoreViewModel
 import kotlin.random.Random
 
 class MatchFunActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMatchFunBinding
+    private val scoreVM : ScoreViewModel by viewModels()
 
     private val totalQuestions = 100
     private var currentIndex = 0
-    private var score = 0
     private var hasAnswered = false
 
     private lateinit var currentQuestion: MathsQuestion
@@ -32,6 +35,12 @@ class MatchFunActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMatchFunBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        lifecycleScope.launchWhenStarted {
+            scoreVM.score.collect { score ->
+                binding.totalCoin.text = "$score"
+            }
+        }
 
         setupListeners()
         loadNextQuestion()
@@ -72,7 +81,7 @@ class MatchFunActivity : AppCompatActivity() {
 
         // Progress
         binding.currentQue.text = "${currentIndex} / $totalQuestions"
-        binding.totalCoin.text = "$score"
+
     }
 
     private fun setOptionsEnabled(enabled: Boolean) {
@@ -100,10 +109,7 @@ class MatchFunActivity : AppCompatActivity() {
         setOptionsEnabled(false)
 
         val isCorrect = index == currentQuestion.correctIndex
-        if (isCorrect) {
-            score++
 
-        }
         markCorrectWrong(index)
 
         // If you have a custom dialog util, use it. Otherwise a simple Toast works.
@@ -115,6 +121,7 @@ class MatchFunActivity : AppCompatActivity() {
             onNextClick = {  Congrats.showCongratsAlert(
                 context = this,
                 onClaimClick = {
+                    scoreVM.addScore(+1)
                     // Back to MathActivity → load next question
                     hasAnswered = false
                     setOptionsEnabled(true)
@@ -159,7 +166,7 @@ class MatchFunActivity : AppCompatActivity() {
                 context = this,
                 type = AlertType.CONGRATULATION,
                 title = "Quiz Finished 🎉",
-                description = "Your final score: $score / $totalQuestions",
+                description = "Your final score: ${scoreVM.score.value} / $totalQuestions",
                 onNextClick = { finish() }
             )
     }

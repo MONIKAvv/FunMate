@@ -5,16 +5,18 @@ import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import vv.monika.funmate.data.LocalQuestionRepository
 import vv.monika.funmate.databinding.ActivitySoundMatchBinding
+import vv.monika.funmate.model.ScoreViewModel
 import vv.monika.funmate.ui.QuestionDeckViewModel
 
 class SoundMatchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySoundMatchBinding
+    private val scoreVM: ScoreViewModel by viewModels()
     private val vm: QuestionDeckViewModel by viewModels()
     private var isHintVisible = false
-    private var score = 0
     private var hasAnswered = false
     private var currentQuestion: QuestionsItem? = null
 
@@ -28,6 +30,11 @@ class SoundMatchActivity : AppCompatActivity() {
         val repo = LocalQuestionRepository(this, "sound_questions.json")
         vm.initIfNeeded(repo, Subjects = "Sound")
 
+lifecycleScope.launchWhenStarted {
+    scoreVM.score.collect { score ->
+        binding.totalCoin.text = "$score"
+    }
+}
 
         setUpListener()
         loadNextQuestion()
@@ -44,7 +51,7 @@ class SoundMatchActivity : AppCompatActivity() {
                 context = this,
                 type = AlertType.CONGRATULATION,
                 title = "Completed!",
-                description = "Your score: $score / ${vm.progress().second}",
+                description = "Your score: ${scoreVM.score.value} / ${vm.progress().second}",
                 onNextClick = { finish() }
             )
             return
@@ -61,7 +68,6 @@ class SoundMatchActivity : AppCompatActivity() {
         val (currentIndex, total) = vm.progress()
         binding.currentQue.text = currentIndex.toString()
         binding.totalQue.text = total.toString()
-        binding.totalCoin.text = score.toString()
         binding.hintBubble.text = q.Hint ?: ""
         setOptionsEnabled(true)
 
@@ -89,23 +95,26 @@ class SoundMatchActivity : AppCompatActivity() {
         val q = currentQuestion ?: return
         val correct = q.AnswerIndex
         val isCorrect = (index == correct)
-        if (isCorrect) {
-            score++
-        }
+
+
+
         CustomAlert.showCustomAlert(
             context = this,
             type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
             title = if (isCorrect) "Correct! 🎉" else "Wrong Answer ❌",
             description = if (isCorrect) "Well done!" else "Correct was: $correct",
-            onNextClick = {  Congrats.showCongratsAlert(
-                context = this,
-                onClaimClick = {
-                    // Back to MathActivity → load next question
-                    hasAnswered = false
-                    setOptionsEnabled(true)
-                    loadNextQuestion()
-                },10000
-            ) },
+            onNextClick = {
+                Congrats.showCongratsAlert(
+                    context = this,
+                    onClaimClick = {
+                        scoreVM.addScore(+1)
+                        // Back to MathActivity → load next question
+                        hasAnswered = false
+                        setOptionsEnabled(true)
+                        loadNextQuestion()
+                    }, 10000
+                )
+            },
             onCloseClick = {
 //                apply has answered things
             }

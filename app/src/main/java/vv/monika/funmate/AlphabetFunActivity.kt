@@ -3,18 +3,24 @@ package vv.monika.funmate
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import vv.monika.funmate.data.AlphabetFunQuestion
 import vv.monika.funmate.databinding.ActivityAlphabetFunBinding
+import vv.monika.funmate.model.ScoreViewModel
+import kotlin.getValue
 
 class AlphabetFunActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAlphabetFunBinding
+//    fragment me activityViewModels hota h esme yesa hi h
+    private val scoreVM : ScoreViewModel by viewModels()
+
     private var isHintVisible = false
 
     private val totalQuestions = 100
     private var currentIndex = 0
-    private var score = 0
     private var hasAnswered = false
     private lateinit var currentQuestion: AlphabetFunQuestion
 
@@ -23,6 +29,11 @@ class AlphabetFunActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityAlphabetFunBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        lifecycleScope.launchWhenStarted {
+            scoreVM.score.collect { score ->
+                binding.totalCoin.text = "$score"
+             }
+        }
 
         setUpListeners()
         loadNextQuestion() // load the first question
@@ -45,9 +56,6 @@ class AlphabetFunActivity : AppCompatActivity() {
         setOptionsEnabled(false)
 
         val isCorrect = index == currentQuestion.correctIndex
-        if (isCorrect) {
-            score++
-        }
 
         CustomAlert.showCustomAlert(
             context = this,
@@ -57,6 +65,7 @@ class AlphabetFunActivity : AppCompatActivity() {
             onNextClick = {  Congrats.showCongratsAlert(
                 context = this,
                 onClaimClick = {
+                    scoreVM.addScore(+1)
                     // Back to MathActivity → load next question
                     hasAnswered = false
                     setOptionsEnabled(true)
@@ -95,7 +104,7 @@ class AlphabetFunActivity : AppCompatActivity() {
 
         setOptionsEnabled(true)
         binding.currentQue.text = "${currentIndex}/$totalQuestions"
-        binding.totalCoin.text = "$score"
+
     }
 
     private fun generateQuestion(): AlphabetFunQuestion {
@@ -174,7 +183,7 @@ class AlphabetFunActivity : AppCompatActivity() {
             context = this,
             type = AlertType.CONGRATULATION,
             title = "Quiz Finished 🎉",
-            description = "Your final score: $score / $totalQuestions",
+            description = "Your final score: ${scoreVM.score.value}/ $totalQuestions",
             onNextClick = { finish() }
         )
     }

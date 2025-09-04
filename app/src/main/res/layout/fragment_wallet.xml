@@ -81,7 +81,7 @@
         android:id="@+id/amazon_pay"
         android:layout_width="367dp"
         android:layout_height="113dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="52dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5"
@@ -133,18 +133,18 @@
     <!--        app:layout_constraintStart_toStartOf="@+id/imageView15"-->
     <!--        app:layout_constraintTop_toBottomOf="@+id/imageView15" />-->
 
-    <Button
-        android:id="@+id/apply_pay_btn"
-        android:layout_width="192dp"
-        android:layout_height="55dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/orange_button_shape"
-        android:text="Apply"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+<!--    <Button-->
+<!--        android:id="@+id/apply_pay_btn"-->
+<!--        android:layout_width="192dp"-->
+<!--        android:layout_height="55dp"-->
+<!--        android:layout_marginBottom="24dp"-->
+<!--        android:background="@drawable/orange_button_shape"-->
+<!--        android:text="Apply"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:textColor="@color/black"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

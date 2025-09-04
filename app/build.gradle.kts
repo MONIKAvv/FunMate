@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+
 android {
     namespace = "vv.monika.funmate"
     compileSdk = 35
@@ -31,6 +32,16 @@ android {
             )
         }
     }
+    packaging {
+        resources {
+            excludes += listOf( // ✅ Corrected
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE.txt",
+                "META-INF/NOTICE.md",
+                "META-INF/NOTICE.txt"
+            )
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -42,6 +53,8 @@ android {
         compose = true
     }
 }
+
+
 
 dependencies {
 
@@ -64,6 +77,7 @@ dependencies {
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.gridlayout)
     implementation(libs.androidx.tracing.perfetto.handshake)
+    implementation(libs.androidx.databinding.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -97,5 +111,9 @@ dependencies {
 
 //    dependencies for custom tab
     implementation ("androidx.browser:browser:1.5.0")
+
+//modelview
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
 }

@@ -5,20 +5,26 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.interaction.DragInteraction
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import vv.monika.funmate.adapter.GameAdapter
 import vv.monika.funmate.databinding.ActivityGameBinding
 import vv.monika.funmate.model.GameItem
+import vv.monika.funmate.model.ScoreViewModel
+import kotlin.properties.ReadOnlyProperty
 
 class GameActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGameBinding
-    private var score = 0
+    private lateinit var scoreVM: ScoreViewModel
+
     private var gameStartTime: Long = 0L
     private var isGameRunning = false
 
@@ -26,16 +32,49 @@ class GameActivity : AppCompatActivity() {
         private const val GAME_TIMER_DURATION = 30000L // 30 seconds
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        scoreVM = ViewModelProvider(
+            this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+        ).get(ScoreViewModel::class.java)
+
+        lifecycleScope.launchWhenStarted {
+            scoreVM.score.collect { currentScore ->
+                binding.totalCoin.text = "$currentScore"
+            }
+        }
+
         binding.backButton.setOnClickListener { finish() }
 
         val data = getDummyGames()
         setupRecyclerView(data)
+    }
+    private fun handleGameClick(item: GameItem) {
+        Toast.makeText(this, "Clicked ${item.title}", Toast.LENGTH_SHORT).show()
+
+
+        // Track when user starts playing
+        gameStartTime = System.currentTimeMillis()
+        isGameRunning = true
+
+        openCustomTab(item.url)
+
+        GameNotifier.showNotification(
+            context = this,
+            type = AlertType.START,
+            title = "Running",
+            description = "Please wait for the timer to finish",
+            onClaimClick = {
+                scoreVM.addScore(+10)
+                isGameRunning = false
+            },
+            countDownTimer = GAME_TIMER_DURATION.toInt()
+        )
     }
 
     private fun getDummyGames() = listOf(
@@ -60,29 +99,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleGameClick(item: GameItem) {
-        Toast.makeText(this, "Clicked ${item.title}", Toast.LENGTH_SHORT).show()
-        binding.totalCoin.text = "$score"
 
-        // Track when user starts playing
-        gameStartTime = System.currentTimeMillis()
-        isGameRunning = true
-
-        openCustomTab(item.url)
-
-        GameNotifier.showNotification(
-            context = this,
-            type = AlertType.START,
-            title = "Running",
-            description = "Please wait for the timer to finish",
-            onClaimClick = {
-                score += 10
-                binding.totalCoin.text = "$score"
-                isGameRunning = false
-            },
-            countDownTimer = GAME_TIMER_DURATION.toInt()
-        )
-    }
 
     override fun onResume() {
         super.onResume()

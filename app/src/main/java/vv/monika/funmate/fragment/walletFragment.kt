@@ -8,20 +8,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import kotlinx.coroutines.launch
 import vv.monika.funmate.databinding.ActivityRadeemCodeBinding
 import vv.monika.funmate.databinding.FragmentWalletBinding
+import vv.monika.funmate.model.ScoreViewModel
 import vv.monika.funmate.walletRadeemActivity
 
 class WalletFragment : Fragment() {
 
     private lateinit var binding: FragmentWalletBinding
+    private val scoreVM: ScoreViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentWalletBinding.inflate(inflater, container, false)
+
+//        score
+       lifecycleScope.launchWhenStarted {
+           scoreVM.score.collect { score ->
+           binding.totalCoin.text = "$score"
+           }
+       }
 
         // ✅ Amazon Pay
         binding.amazonPay.setOnClickListener {

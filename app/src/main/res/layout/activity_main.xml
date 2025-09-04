@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-
     tools:context=".MainActivity">
 
     <!-- Main Content Area -->
@@ -17,20 +16,14 @@
         android:background="@drawable/background_screen">
 
         <!-- Fragment Container -->
-
-        <!-- Navigation Drawer Toggle Button -->
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Bottom Navigation Bar -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -42,22 +35,19 @@
             app:menu="@menu/bottom_menu_item"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Side Navigation Drawer -->
+    <!-- ✅ Side Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/side_nav_view"
         android:layout_width="670dp"
-        android:layout_height="800dp"
-        android:layout_marginStart="30dp"
+        android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@drawable/drawer_bg"
         app:headerLayout="@layout/drawer_header"
         app:itemIconPadding="30dp"
         app:itemTextColor="@color/white"
-        app:menu="@menu/drawer_menu_item">
-
-    </com.google.android.material.navigation.NavigationView>
+        app:menu="@menu/drawer_menu_item" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

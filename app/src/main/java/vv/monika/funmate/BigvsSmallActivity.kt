@@ -3,9 +3,14 @@ package vv.monika.funmate
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import vv.monika.funmate.data.BigVsSmallQuestion
 import vv.monika.funmate.databinding.ActivityBigvsSmallBinding
+import vv.monika.funmate.model.ScoreViewModel
 import kotlin.random.Random
 import kotlin.math.max
 
@@ -18,11 +23,12 @@ enum class Comparison(val prompt: String) {
 
 class BigvsSmallActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBigvsSmallBinding
+    private val scoreVM: ScoreViewModel by viewModels()
+
     private var isHintVisible = false
 
     private val totalQuestions = 100
     private var currentIndex = 0
-    private var score = 0
     private var hasAnswered = false
     private lateinit var currentQuestion: BigVsSmallQuestion
 
@@ -31,6 +37,12 @@ class BigvsSmallActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityBigvsSmallBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        lifecycleScope.launchWhenStarted {
+            scoreVM.score.collect { score ->
+                binding.totalCoin.text = "$score"
+            }
+        }
 
         setUpListeners()
         loadNextQuestion()
@@ -62,7 +74,6 @@ class BigvsSmallActivity : AppCompatActivity() {
 
         setOptionsEnabled(true)
         binding.currentQue.text = "${currentIndex}/$totalQuestions"
-        binding.totalCoin.text = "$score"
     }
 
     // ---------- Question generation ----------
@@ -167,10 +178,6 @@ class BigvsSmallActivity : AppCompatActivity() {
         setOptionsEnabled(false)
 
         val isCorrect = index == currentQuestion.correctIndex
-        if (isCorrect) {
-            score++
-        }
-
 
         CustomAlert.showCustomAlert(
             context = this,
@@ -180,6 +187,7 @@ class BigvsSmallActivity : AppCompatActivity() {
             onNextClick = {  Congrats.showCongratsAlert(
                 context = this,
                 onClaimClick = {
+                    scoreVM.addScore(+1)
                     // Back to MathActivity → load next question
                     hasAnswered = false
                     setOptionsEnabled(true)
@@ -238,7 +246,7 @@ class BigvsSmallActivity : AppCompatActivity() {
             context = this,
             type = AlertType.CONGRATULATION,
             title = "Quiz Finished 🎉",
-            description = "Your final score: $score / $totalQuestions",
+            description = "Your final score: ${scoreVM.score.value} / $totalQuestions",
             onNextClick = { finish() }
         )
     }
