@@ -208,7 +208,7 @@
         </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView8"
+        android:id="@+id/card_view"
         android:layout_width="57dp"
         android:layout_height="57dp"
         android:layout_marginStart="72dp"
@@ -243,16 +243,17 @@
             app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
     <TextView
+        android:id="@+id/skip_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/poppins"
         android:text="Skip"
-        android:layout_marginTop="8dp"
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/cardView8"
-        app:layout_constraintStart_toStartOf="@+id/cardView8"
-        app:layout_constraintTop_toBottomOf="@+id/cardView8" />
+        app:layout_constraintEnd_toEndOf="@+id/card_view"
+        app:layout_constraintStart_toStartOf="@+id/card_view"
+        app:layout_constraintTop_toBottomOf="@+id/card_view" />
 
         <TextView
             android:id="@+id/hintBubble"

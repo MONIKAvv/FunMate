@@ -15,7 +15,6 @@ import kotlin.random.Random
 import kotlin.math.max
 
 
-
 enum class Comparison(val prompt: String) {
     GREATER("is greater than = ?"),
     SMALLER("is less than = ?")
@@ -27,7 +26,7 @@ class BigvsSmallActivity : AppCompatActivity() {
 
     private var isHintVisible = false
 
-    private val totalQuestions = 100
+    private val totalQuestions = 2
     private var currentIndex = 0
     private var hasAnswered = false
     private lateinit var currentQuestion: BigVsSmallQuestion
@@ -43,6 +42,21 @@ class BigvsSmallActivity : AppCompatActivity() {
                 binding.totalCoin.text = "$score"
             }
         }
+        lifecycleScope.launchWhenStarted {
+            canAttemptQuestion(
+                this@BigvsSmallActivity,
+                "BigVsSmall",
+                totalQuestions
+            ).collect { canPlay ->
+                if (canPlay) {
+                    setUpListeners()
+                    loadNextQuestion()
+                } else {
+                    showDailyLimitReached()
+                }
+            }
+        }
+
 
         setUpListeners()
         loadNextQuestion()
@@ -52,14 +66,10 @@ class BigvsSmallActivity : AppCompatActivity() {
     private fun loadNextQuestion() {
         hideHint() // always reset hint
 
-        if (currentIndex >= totalQuestions) {
-            showFinalScore()
-            return
-        }
 
         currentQuestion = generateQuestion()
         renderQuestion(currentQuestion)
-        currentIndex++
+
     }
 
     private fun renderQuestion(q: BigVsSmallQuestion) {
@@ -144,6 +154,7 @@ class BigvsSmallActivity : AppCompatActivity() {
                     if (c < base) continue
                     c
                 }
+
                 Comparison.SMALLER -> {
                     // WRONG must be <= base
                     val c = randNearBelow(max(1, base - 200), base)
@@ -178,22 +189,37 @@ class BigvsSmallActivity : AppCompatActivity() {
         setOptionsEnabled(false)
 
         val isCorrect = index == currentQuestion.correctIndex
+        if (isCorrect) {
+            currentIndex++
+
+
+            lifecycleScope.launchWhenStarted {
+                incrementQuestionCount(this@BigvsSmallActivity, "BigVsSmall")
+            }
+        }
 
         CustomAlert.showCustomAlert(
             context = this,
             type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
             title = if (isCorrect) "Correct! 🎉" else "Wrong Answer ❌",
             description = if (isCorrect) "Well done!" else "Try again!",
-            onNextClick = {  Congrats.showCongratsAlert(
-                context = this,
-                onClaimClick = {
-                    scoreVM.addScore(+1)
-                    // Back to MathActivity → load next question
-                    hasAnswered = false
-                    setOptionsEnabled(true)
-                    loadNextQuestion()
-                },10000
-            ) },
+            onNextClick = {
+                Congrats.showCongratsAlert(
+                    context = this,
+                    onClaimClick = {
+                        scoreVM.addScore(+1)
+                        // Back to MathActivity → load next question
+                        hasAnswered = false
+                        if(currentIndex >= totalQuestions){
+                            showDailyLimitReached()
+                        }else{
+                            setOptionsEnabled(true)
+                            loadNextQuestion()
+                        }
+
+                    }, 1000
+                )
+            },
             onCloseClick = {
                 hasAnswered = false
                 setOptionsEnabled(true)
@@ -240,14 +266,23 @@ class BigvsSmallActivity : AppCompatActivity() {
     }
 
     // ---------- Finish ----------
-    private fun showFinalScore() {
+    private fun showDailyLimitReached() {
         binding.questionTextview.text = "Finished!"
+        binding.optionA.text = " "
+        binding.optionB.text = " "
+        binding.optionC.text = " "
+        binding.optionD.text = " "
         CustomAlert.showCustomAlert(
             context = this,
             type = AlertType.CONGRATULATION,
             title = "Quiz Finished 🎉",
-            description = "Your final score: ${scoreVM.score.value} / $totalQuestions",
+            description = "You reached to your daily limit \n Please visit next day!",
             onNextClick = { finish() }
         )
+        binding.skipBtn.visibility = View.GONE
+        binding.cardViewBs.visibility = View.GONE
+        binding.skipTextView.visibility = View.GONE
+        hideHint()
+        setOptionsEnabled(false)
     }
 }

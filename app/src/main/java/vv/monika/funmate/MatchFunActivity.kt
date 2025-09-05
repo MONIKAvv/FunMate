@@ -13,9 +13,9 @@ import kotlin.random.Random
 
 class MatchFunActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMatchFunBinding
-    private val scoreVM : ScoreViewModel by viewModels()
+    private val scoreVM: ScoreViewModel by viewModels()
 
-    private val totalQuestions = 100
+    private val dailyTotalQuestions = 1
     private var currentIndex = 0
     private var hasAnswered = false
 
@@ -41,6 +41,18 @@ class MatchFunActivity : AppCompatActivity() {
                 binding.totalCoin.text = "$score"
             }
         }
+//check if user can play today
+//        lifecycleScope.launchWhenStarted {
+//            canAttemptQuestion(this@MatchFunActivity, "Math",dailyTotalQuestions).collect { canPlay ->
+//                if(canPlay){
+//                    setupListeners()
+//                    loadNextQuestion()
+//                }else{
+//                    showDailyLimitReached()
+//                }
+//            }
+//        }
+
 
         setupListeners()
         loadNextQuestion()
@@ -64,6 +76,7 @@ class MatchFunActivity : AppCompatActivity() {
         hasAnswered = false
         binding.questionTextview.text = "${q.a} ${q.op.symbol} ${q.b} = ?"
 
+
         // Assign options
 //        binding.optionALabel.text = "A"
         binding.optionA.text = q.options[0].toString()
@@ -80,7 +93,7 @@ class MatchFunActivity : AppCompatActivity() {
         clearOptionStyles()
 
         // Progress
-        binding.currentQue.text = "${currentIndex} / $totalQuestions"
+
 
     }
 
@@ -111,29 +124,45 @@ class MatchFunActivity : AppCompatActivity() {
         val isCorrect = index == currentQuestion.correctIndex
 
         markCorrectWrong(index)
+        if (isCorrect) {
+            currentIndex++
 
+            lifecycleScope.launchWhenStarted {
+                incrementQuestionCount(this@MatchFunActivity, "Math")
+            }
+        }
         // If you have a custom dialog util, use it. Otherwise a simple Toast works.
-        CustomAlert.showCustomAlert(
-            context = this,
-            type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
-            title = if (isCorrect) "Correct!" else "Wrong Answer",
-            description = if (isCorrect) "Well done! 🎉" else "Try again! 💪",
-            onNextClick = {  Congrats.showCongratsAlert(
+
+        if (currentIndex > dailyTotalQuestions) {
+            showDailyLimitReached()
+        } else {
+            CustomAlert.showCustomAlert(
                 context = this,
-                onClaimClick = {
-                    scoreVM.addScore(+1)
-                    // Back to MathActivity → load next question
+                type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
+                title = if (isCorrect) "Correct!" else "Wrong Answer",
+                description = if (isCorrect) "Well done! 🎉" else "Try again! 💪",
+                onNextClick = {
+                    Congrats.showCongratsAlert(
+                        context = this,
+                        onClaimClick = {
+                            scoreVM.addScore(+1)
+                            binding.currentQue.text = "${currentIndex} / $dailyTotalQuestions"
+                            hideHint()
+                            loadNextQuestion()
+                            // Back to MathActivity → load next question
+                            hasAnswered = false
+
+                        },
+                        1000
+                    )
+                },
+                onCloseClick = {
                     hasAnswered = false
                     setOptionsEnabled(true)
-                    loadNextQuestion()
-                },
-                10000
-            ) },
-            onCloseClick = {
-                hasAnswered = false
-                setOptionsEnabled(true)
-            }
-        )
+                }
+            )
+        }
+
 
         // Simple fallback: automatically go to next question after a short delay
 //        binding.root.postDelayed({
@@ -142,33 +171,28 @@ class MatchFunActivity : AppCompatActivity() {
     }
 
     private fun loadNextQuestion() {
-
-//        binding.hintBubble.visibility = View.GONE
-//        binding.btnHint.setImageResource(R.drawable.hint_icon)
         hideHint()
 
-        if (currentIndex >= totalQuestions) {
-            showFinalScore()
-            return
-        }
+//        if (currentIndex >= dailyTotalQuestions) {
+//            showDailyLimitReached()
+//            return
+//        }
 
         currentQuestion = generateQuestion()
         renderQuestion(currentQuestion)
-        currentIndex++
+
     }
 
-    private fun showFinalScore() {
-        // TODO: Replace with your own summary UI / dialog / navigate to result screen.
-        // Example minimal Toast:
-        // Toast.makeText(this, "Final Score: $score / $totalQuestions", Toast.LENGTH_LONG).show()
-        binding.questionTextview.text = "Finished!"
-       CustomAlert.showCustomAlert(
-                context = this,
-                type = AlertType.CONGRATULATION,
-                title = "Quiz Finished 🎉",
-                description = "Your final score: ${scoreVM.score.value} / $totalQuestions",
-                onNextClick = { finish() }
-            )
+    private fun showDailyLimitReached() {
+        hideHint()
+        CustomAlert.showCustomAlert(
+            context = this,
+            type = AlertType.CONGRATULATION,
+            title = "Quiz Finished 🎉",
+            description = "You reached to your daily limit \n Please visit next day!",
+            onNextClick = { finish() }
+        )
+        loadNextQuestion()
     }
 
     // ---------------- Question generation ----------------
@@ -238,6 +262,7 @@ class MatchFunActivity : AppCompatActivity() {
             .setDuration(120)
             .withEndAction { binding.hintBubble.visibility = View.GONE }
             .start()
+        isHintVisible = false
     }
 
 }

@@ -14,12 +14,13 @@ import kotlin.getValue
 class AlphabetFunActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAlphabetFunBinding
-//    fragment me activityViewModels hota h esme yesa hi h
-    private val scoreVM : ScoreViewModel by viewModels()
+
+    //    fragment me activityViewModels hota h esme yesa hi h
+    private val scoreVM: ScoreViewModel by viewModels()
 
     private var isHintVisible = false
 
-    private val totalQuestions = 100
+    private val totalQuestions = 2
     private var currentIndex = 0
     private var hasAnswered = false
     private lateinit var currentQuestion: AlphabetFunQuestion
@@ -32,7 +33,18 @@ class AlphabetFunActivity : AppCompatActivity() {
         lifecycleScope.launchWhenStarted {
             scoreVM.score.collect { score ->
                 binding.totalCoin.text = "$score"
-             }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            canAttemptQuestion(this@AlphabetFunActivity, "AlphabetFun",totalQuestions).collect { canPlay ->
+                if (canPlay){
+                    setUpListeners()
+                    loadNextQuestion()
+                }else{
+                    showDailyLimitReached()
+                }
+            }
         }
 
         setUpListeners()
@@ -56,22 +68,34 @@ class AlphabetFunActivity : AppCompatActivity() {
         setOptionsEnabled(false)
 
         val isCorrect = index == currentQuestion.correctIndex
+        if (isCorrect) {
+            currentIndex++
 
+            lifecycleScope.launchWhenStarted {
+                incrementQuestionCount(this@AlphabetFunActivity, "AlphabetFun")
+            }
+        }
         CustomAlert.showCustomAlert(
             context = this,
             type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
             title = if (isCorrect) "Correct! 🎉" else "Wrong Answer ❌",
             description = if (isCorrect) "Well done!" else "Try again!",
-            onNextClick = {  Congrats.showCongratsAlert(
-                context = this,
-                onClaimClick = {
-                    scoreVM.addScore(+1)
-                    // Back to MathActivity → load next question
-                    hasAnswered = false
-                    setOptionsEnabled(true)
-                    loadNextQuestion()
-                },10000
-            ) },
+            onNextClick = {
+                Congrats.showCongratsAlert(
+                    context = this,
+                    onClaimClick = {
+                        scoreVM.addScore(+1)
+                        // Back to MathActivity → load next question
+                        hasAnswered = false
+                        if(currentIndex >= totalQuestions){
+                            showDailyLimitReached()
+                        }else{
+                        setOptionsEnabled(true)
+                        loadNextQuestion()
+                        }
+                    }, 1000
+                )
+            },
             onCloseClick = {
                 hasAnswered = false
                 setOptionsEnabled(true)
@@ -83,14 +107,14 @@ class AlphabetFunActivity : AppCompatActivity() {
         // Always hide hint for new question
         hideHint()
 
-        if (currentIndex >= totalQuestions) {
-            showFinalScore()
-            return
-        }
+//        if (currentIndex >= totalQuestions) {
+//            showDailyLimitReached()
+//            return
+//        }
 
         currentQuestion = generateQuestion()
         renderQuestion(currentQuestion)
-        currentIndex++
+
     }
 
     private fun renderQuestion(q: AlphabetFunQuestion) {
@@ -177,14 +201,22 @@ class AlphabetFunActivity : AppCompatActivity() {
 
     }
 
-    private fun showFinalScore() {
+    private fun showDailyLimitReached() {
         binding.questionTextview.text = "Finished!"
+       binding.optionA.text = " "
+       binding.optionB.text = " "
+       binding.optionC.text = " "
+       binding.optionD.text = " "
         CustomAlert.showCustomAlert(
             context = this,
             type = AlertType.CONGRATULATION,
             title = "Quiz Finished 🎉",
-            description = "Your final score: ${scoreVM.score.value}/ $totalQuestions",
+            description = "You reached to your daily limit \n Please visit next day!",
             onNextClick = { finish() }
         )
+        binding.cardView.visibility = View.GONE
+        binding.skipBtn.visibility = View.GONE
+        binding.skipTextView.visibility = View.GONE
+        setOptionsEnabled(false)
     }
 }

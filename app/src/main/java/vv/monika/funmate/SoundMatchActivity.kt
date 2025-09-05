@@ -51,7 +51,7 @@ lifecycleScope.launchWhenStarted {
                 context = this,
                 type = AlertType.CONGRATULATION,
                 title = "Completed!",
-                description = "Your score: ${scoreVM.score.value} / ${vm.progress().second}",
+                description = "You reached to your daily limit \n Please visit next day!",
                 onNextClick = { finish() }
             )
             return
@@ -96,7 +96,9 @@ lifecycleScope.launchWhenStarted {
         val correct = q.AnswerIndex
         val isCorrect = (index == correct)
 
+if(isCorrect){
 
+}
 
         CustomAlert.showCustomAlert(
             context = this,

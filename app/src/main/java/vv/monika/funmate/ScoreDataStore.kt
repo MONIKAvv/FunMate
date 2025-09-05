@@ -1,10 +1,14 @@
 package vv.monika.funmate
 import android.content.Context
+import androidx.compose.ui.text.intl.Locale
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 //saving data the function called from scoreviewmodel
@@ -13,6 +17,8 @@ val Context.dataStore by preferencesDataStore("app_prefs")
 //keys
 object ScoreKeys{
     val SCORE = intPreferencesKey("score")
+    private const val KEY_DATE_SUFFIX = "_date"
+    private const val KEY_COUNT_SUFFIX = "_count"
 }
 
 suspend fun saveScore(context:Context, score:Int){
@@ -26,3 +32,69 @@ fun getScore(context: Context): Flow<Int> {
         prefs[ScoreKeys.SCORE]?: 0
     }
 }
+
+//Get today's Date String
+fun getTodayDate(): String {
+    val sdf = SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+    return sdf.format(Date())
+}
+
+//generate dynamic keys per sbject
+fun getDateKey(subject: String) = stringPreferencesKey("${subject}_date")
+fun getCountKey(subject: String) = intPreferencesKey("${subject}_count")
+// Check if user can attempt question today
+fun canAttemptQuestion(context: Context, subject: String,dailyLimit: Int): Flow<Boolean>{
+    val today = getTodayDate()
+    val dateKey = getDateKey(subject)
+    val countKey = getCountKey(subject)
+
+    return context.dataStore.data.map { prefs ->
+        val lastDate = prefs[dateKey] ?: ""
+        val count = prefs[countKey] ?:0
+
+        if(lastDate != today){
+            true
+        }else{
+            count < dailyLimit
+        }
+    }
+}
+
+// Increment question count
+suspend fun incrementQuestionCount(context: Context, subject: String) {
+    val today = getTodayDate()
+    val dateKey = getDateKey(subject)
+    val countKey = getCountKey(subject)
+
+    context.dataStore.edit { prefs ->
+        val lastDate = prefs[dateKey] ?: ""
+        var currentCount = prefs[countKey] ?: 0
+
+        if (lastDate != today) {
+            // Reset if new day
+            prefs[dateKey] = today
+            prefs[countKey] = 1
+        } else {
+            prefs[countKey] = currentCount + 1
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

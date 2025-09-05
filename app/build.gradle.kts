@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.androidx.gridlayout)
     implementation(libs.androidx.tracing.perfetto.handshake)
     implementation(libs.androidx.databinding.compiler)
+    implementation(libs.protolite.well.known.types)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
