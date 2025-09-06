@@ -6,6 +6,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.first
+import vv.monika.funmate.AlphabetFunActivity
 import vv.monika.funmate.data.MathsQuestion
 import vv.monika.funmate.databinding.ActivityMatchFunBinding
 import vv.monika.funmate.model.ScoreViewModel
@@ -14,10 +16,11 @@ import kotlin.random.Random
 class MatchFunActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMatchFunBinding
     private val scoreVM: ScoreViewModel by viewModels()
-
-    private val dailyTotalQuestions = 1
+    private var isLimitAlertShown = false
+    private val dailyTotalQuestions = 5
     private var currentIndex = 0
     private var hasAnswered = false
+    private var practiceMode = false
 
     private lateinit var currentQuestion: MathsQuestion
 
@@ -36,26 +39,37 @@ class MatchFunActivity : AppCompatActivity() {
         binding = ActivityMatchFunBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val subject = "Math"
+        reFreshDailyCount(this, subject)
+
+        setupListeners()
         lifecycleScope.launchWhenStarted {
             scoreVM.score.collect { score ->
                 binding.totalCoin.text = "$score"
             }
         }
 //check if user can play today
-//        lifecycleScope.launchWhenStarted {
-//            canAttemptQuestion(this@MatchFunActivity, "Math",dailyTotalQuestions).collect { canPlay ->
-//                if(canPlay){
-//                    setupListeners()
-//                    loadNextQuestion()
-//                }else{
-//                    showDailyLimitReached()
-//                }
-//            }
-//        }
+        lifecycleScope.launchWhenStarted {
 
+            val today = getTodayDate()
+            val dateKey = getDateKey(subject)
+            val countKey = getCountKey(subject)
+            val prefs = applicationContext.dataStore.data.first()
+            val lastDate = prefs[dateKey] ?: ""
+            val count = prefs[countKey] ?: 0
 
-        setupListeners()
-        loadNextQuestion()
+            currentIndex = if (lastDate == today) count else 0
+            practiceMode = currentIndex >= dailyTotalQuestions
+
+            if (practiceMode) {
+                // Already reached today's limit
+                showDailyLimitReachedOnce()
+            }
+            loadNextQuestion()
+            binding.currentQue.text = "${currentIndex} / $dailyTotalQuestions"
+
+        }
+
     }
 
     // ---------------- UI / Listeners ----------------
@@ -69,7 +83,6 @@ class MatchFunActivity : AppCompatActivity() {
         binding.optionC.setOnClickListener { onOptionClicked(2) }
         binding.optionD.setOnClickListener { onOptionClicked(3) }
 
-//        binding.nextButton.setOnClickListener { loadNextQuestion() }
     }
 
     private fun renderQuestion(q: MathsQuestion) {
@@ -116,26 +129,30 @@ class MatchFunActivity : AppCompatActivity() {
         // if (chosenIndex != currentQuestion.correctIndex) views[chosenIndex].setBackgroundResource(R.drawable.bg_wrong)
     }
 
+// To ensure Finish alert shows only once
+
     private fun onOptionClicked(index: Int) {
         if (hasAnswered) return
         hasAnswered = true
         setOptionsEnabled(false)
 
-        val isCorrect = index == currentQuestion.correctIndex
+        // 🔥 Practice mode (after daily limit)
 
+        // Practice mode: Just mark correct/wrong, but no score increment
+        val isCorrect = index == currentQuestion.correctIndex
         markCorrectWrong(index)
-        if (isCorrect) {
+        val wasUnderLimit = !practiceMode
+
+        if (isCorrect && wasUnderLimit) {
             currentIndex++
 
             lifecycleScope.launchWhenStarted {
                 incrementQuestionCount(this@MatchFunActivity, "Math")
             }
         }
-        // If you have a custom dialog util, use it. Otherwise a simple Toast works.
-
-        if (currentIndex > dailyTotalQuestions) {
-            showDailyLimitReached()
-        } else {
+        val nowReachedOrOverLimit = currentIndex >= dailyTotalQuestions
+        if (wasUnderLimit) {
+            // NORMAL MODE (coins/claim)
             CustomAlert.showCustomAlert(
                 context = this,
                 type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
@@ -145,15 +162,20 @@ class MatchFunActivity : AppCompatActivity() {
                     Congrats.showCongratsAlert(
                         context = this,
                         onClaimClick = {
-                            scoreVM.addScore(+1)
+                            if (isCorrect) scoreVM.addScore(+1) // coins only under limit
                             binding.currentQue.text = "${currentIndex} / $dailyTotalQuestions"
                             hideHint()
-                            loadNextQuestion()
-                            // Back to MathActivity → load next question
-                            hasAnswered = false
 
+                            // Agar abhi limit hit ho gayi to practice mode me shift karo
+                            if (nowReachedOrOverLimit) {
+                                practiceMode = true
+                               showDailyLimitReachedOnce()
+                            }
+
+                            loadNextQuestion()
+                            hasAnswered = false
                         },
-                        1000
+                        10000
                     )
                 },
                 onCloseClick = {
@@ -161,26 +183,36 @@ class MatchFunActivity : AppCompatActivity() {
                     setOptionsEnabled(true)
                 }
             )
+        } else {
+            // PRACTICE MODE (no coins, no count)
+            CustomAlert.showCustomAlert(
+                context = this,
+                type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
+                title = if (isCorrect) "Correct!" else "Wrong Answer",
+                description = if (isCorrect) "Well done! 🎉" else "Try again! 💪",
+                onNextClick = {
+                    loadNextQuestion() // keep practicing
+                    hasAnswered = false
+//                    showDailyLimitReached() this will again and again dailyLimitREached Popup
+                },
+                onCloseClick = {
+                    hasAnswered = false
+                    setOptionsEnabled(true)
+                }
+            )
         }
-
-
-        // Simple fallback: automatically go to next question after a short delay
-//        binding.root.postDelayed({
-//            loadNextQuestion()
-//        }, 600)
     }
 
     private fun loadNextQuestion() {
         hideHint()
-
-//        if (currentIndex >= dailyTotalQuestions) {
-//            showDailyLimitReached()
-//            return
-//        }
-
         currentQuestion = generateQuestion()
         renderQuestion(currentQuestion)
+    }
 
+    private fun showDailyLimitReachedOnce() {
+        if (isLimitAlertShown) return
+        isLimitAlertShown = true
+        showDailyLimitReached()
     }
 
     private fun showDailyLimitReached() {
@@ -189,11 +221,13 @@ class MatchFunActivity : AppCompatActivity() {
             context = this,
             type = AlertType.CONGRATULATION,
             title = "Quiz Finished 🎉",
-            description = "You reached to your daily limit \n Please visit next day!",
-            onNextClick = { finish() }
+            description = "You've reached today's limit! You can keep practicing.",
+            onNextClick = {
+//                congrats wala timer
+            }
         )
-        loadNextQuestion()
     }
+
 
     // ---------------- Question generation ----------------
     private fun generateQuestion(): MathsQuestion {

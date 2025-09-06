@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.first
 import vv.monika.funmate.data.BigVsSmallQuestion
 import vv.monika.funmate.databinding.ActivityBigvsSmallBinding
 import vv.monika.funmate.model.ScoreViewModel
@@ -23,12 +24,12 @@ enum class Comparison(val prompt: String) {
 class BigvsSmallActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBigvsSmallBinding
     private val scoreVM: ScoreViewModel by viewModels()
-
-    private var isHintVisible = false
-
-    private val totalQuestions = 2
+    private var isLimitAlertShown = false
+    private var practiceMode = false
+    private val totalQuestions = 5
     private var currentIndex = 0
     private var hasAnswered = false
+
     private lateinit var currentQuestion: BigVsSmallQuestion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,29 +38,33 @@ class BigvsSmallActivity : AppCompatActivity() {
         binding = ActivityBigvsSmallBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val subject = "BigVsSmall"
+        reFreshDailyCount(this, subject)
+
+        setUpListeners()
         lifecycleScope.launchWhenStarted {
             scoreVM.score.collect { score ->
                 binding.totalCoin.text = "$score"
             }
         }
         lifecycleScope.launchWhenStarted {
-            canAttemptQuestion(
-                this@BigvsSmallActivity,
-                "BigVsSmall",
-                totalQuestions
-            ).collect { canPlay ->
-                if (canPlay) {
-                    setUpListeners()
-                    loadNextQuestion()
-                } else {
-                    showDailyLimitReached()
-                }
+
+            val today = getTodayDate()
+            val dateKey = getDateKey(subject)
+            val countKey = getCountKey(subject)
+            val prefs = applicationContext.dataStore.data.first()
+            val lastDate = prefs[dateKey] ?: ""
+            val count = prefs[countKey] ?: 0
+
+            currentIndex = if (lastDate == today) count else 0
+            practiceMode = currentIndex >= totalQuestions
+
+            if (practiceMode) {
+                showDailyLimitReachedOnce()
             }
+            loadNextQuestion()
+            binding.currentQue.text = "${currentIndex} / $totalQuestions"
         }
-
-
-        setUpListeners()
-        loadNextQuestion()
     }
 
     // ---------- Flow ----------
@@ -83,7 +88,7 @@ class BigvsSmallActivity : AppCompatActivity() {
         binding.optionD.text = q.options[3].toString()
 
         setOptionsEnabled(true)
-        binding.currentQue.text = "${currentIndex}/$totalQuestions"
+
     }
 
     // ---------- Question generation ----------
@@ -189,42 +194,63 @@ class BigvsSmallActivity : AppCompatActivity() {
         setOptionsEnabled(false)
 
         val isCorrect = index == currentQuestion.correctIndex
-        if (isCorrect) {
+
+        val wasUnderLimit = !practiceMode
+        if (isCorrect && wasUnderLimit) {
             currentIndex++
-
-
             lifecycleScope.launchWhenStarted {
                 incrementQuestionCount(this@BigvsSmallActivity, "BigVsSmall")
             }
         }
+        val nowReachedOrOverLimit = currentIndex >= totalQuestions
+        if (wasUnderLimit) {
+            CustomAlert.showCustomAlert(
+                context = this,
+                type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
+                title = if (isCorrect) "Correct! 🎉" else "Wrong Answer ❌",
+                description = if (isCorrect) "Well done!" else "Try again!",
+                onNextClick = {
+                    Congrats.showCongratsAlert(
+                        context = this,
+                        onClaimClick = {
+                            if (isCorrect) scoreVM.addScore(+1) // coins only under limit
+                            binding.currentQue.text = "${currentIndex} / $totalQuestions"
+                            hideHint()
 
-        CustomAlert.showCustomAlert(
-            context = this,
-            type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
-            title = if (isCorrect) "Correct! 🎉" else "Wrong Answer ❌",
-            description = if (isCorrect) "Well done!" else "Try again!",
-            onNextClick = {
-                Congrats.showCongratsAlert(
-                    context = this,
-                    onClaimClick = {
-                        scoreVM.addScore(+1)
-                        // Back to MathActivity → load next question
-                        hasAnswered = false
-                        if(currentIndex >= totalQuestions){
-                            showDailyLimitReached()
-                        }else{
-                            setOptionsEnabled(true)
+                            // Agar abhi limit hit ho gayi to practice mode me shift karo
+                            if (nowReachedOrOverLimit) {
+                                practiceMode = true
+                                showDailyLimitReachedOnce()
+                            }
+
                             loadNextQuestion()
-                        }
+                            hasAnswered = false
+                        },
+                        10000
+                    )
+                },
+                onCloseClick = {
+                    hasAnswered = false
+                    setOptionsEnabled(true)
+                }
+            )
+        } else {
+            CustomAlert.showCustomAlert(
+                context = this,
+                type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
+                title = if (isCorrect) "Correct! 🎉" else "Wrong Answer ❌",
+                description = if (isCorrect) "Well done!" else "Try again!",
+                onNextClick = {
+                    loadNextQuestion()
+                    hasAnswered = false
+                },
+                onCloseClick = {
+                    hasAnswered = false
+                    setOptionsEnabled(true)
+                }
+            )
+        }
 
-                    }, 1000
-                )
-            },
-            onCloseClick = {
-                hasAnswered = false
-                setOptionsEnabled(true)
-            }
-        )
     }
 
     private fun setOptionsEnabled(enabled: Boolean) {
@@ -235,6 +261,7 @@ class BigvsSmallActivity : AppCompatActivity() {
     }
 
     // ---------- Hint ----------
+    private var isHintVisible = false
     private fun toggleHint() {
         if (isHintVisible) hideHint() else showHint()
         isHintVisible = !isHintVisible
@@ -262,27 +289,24 @@ class BigvsSmallActivity : AppCompatActivity() {
             .setDuration(120)
             .withEndAction { binding.hintBubble.visibility = View.GONE }
             .start()
-//        isHintVisible = false
+        isHintVisible = false
     }
 
     // ---------- Finish ----------
+    private fun showDailyLimitReachedOnce() {
+        if (isLimitAlertShown) return
+        isLimitAlertShown = true
+        showDailyLimitReached()
+    }
+
     private fun showDailyLimitReached() {
-        binding.questionTextview.text = "Finished!"
-        binding.optionA.text = " "
-        binding.optionB.text = " "
-        binding.optionC.text = " "
-        binding.optionD.text = " "
+        hideHint()
         CustomAlert.showCustomAlert(
             context = this,
             type = AlertType.CONGRATULATION,
             title = "Quiz Finished 🎉",
             description = "You reached to your daily limit \n Please visit next day!",
-            onNextClick = { finish() }
+            onNextClick = { }
         )
-        binding.skipBtn.visibility = View.GONE
-        binding.cardViewBs.visibility = View.GONE
-        binding.skipTextView.visibility = View.GONE
-        hideHint()
-        setOptionsEnabled(false)
     }
 }

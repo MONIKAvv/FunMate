@@ -1,12 +1,15 @@
 package vv.monika.funmate
 import android.content.Context
 import androidx.compose.ui.text.intl.Locale
+import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -78,6 +81,23 @@ suspend fun incrementQuestionCount(context: Context, subject: String) {
             prefs[countKey] = currentCount + 1
         }
     }
+}
+
+fun reFreshDailyCount(context: Context, subject: String) = runBlocking{
+
+    val today = getTodayDate()
+    val dateKey = getDateKey(subject)
+    val countKey = getCountKey(subject)
+    val prefs = context.dataStore.data.first()
+    val lastDate = prefs[dateKey]?: ""
+
+    if(lastDate != today){
+        context.dataStore.edit { prefsEdit ->
+            prefsEdit[dateKey] = today
+            prefsEdit[countKey] = 0
+        }
+    }
+
 }
 
 
