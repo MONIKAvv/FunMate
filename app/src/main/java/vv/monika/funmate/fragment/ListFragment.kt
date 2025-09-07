@@ -22,9 +22,7 @@ private lateinit var binding: FragmentListBinding
         savedInstanceState: Bundle?
     ): View? {
        binding = FragmentListBinding.inflate(layoutInflater, container,false)
-        binding.backButton.setOnClickListener {
 
-        }
 
 
 

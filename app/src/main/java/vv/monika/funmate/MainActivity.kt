@@ -50,68 +50,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        drawerLayout = binding.drawerLayout
+
         bottomNavigationView = binding.bottomNavigationView
 
-        binding.sideNavView.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.nav_home -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_view, HomeFragment())
-                        .commit()
 
-                }
-
-                R.id.nav_setting -> {
-                    Toast.makeText(this, "Setting Clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-
-                R.id.nav_redeem -> {
-                    startActivity(Intent(this, RadeemCodeActivity::class.java))
-                }
-
-                R.id.nav_history -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_view, RecentFragment())
-                        .commit()
-                }
-
-                R.id.nav_telegram -> {
-                    Toast.makeText(this, "telegram Clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-
-                R.id.nav_rating -> {
-                    Toast.makeText(this, "Rating Clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-
-                R.id.nav_share -> {
-                    startActivity(Intent(this, InviteActivity::class.java))
-                }
-
-                R.id.nav_email -> {
-                    Toast.makeText(this, "Email Clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-
-                R.id.nav_delete_acc -> {
-                    Toast.makeText(this, "Delete Clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-
-                R.id.nav_logout -> {
-                    Toast.makeText(this, "Logout Clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
-
-                else -> false
-            }
-            drawerLayout.closeDrawer(GravityCompat.START)
-         true
-
-        }
 
 //set home fragment as default
         supportFragmentManager.beginTransaction().replace(R.id.fragment_view, HomeFragment())
@@ -144,9 +86,9 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.listFragment -> {
-//                supportFragmentManager.beginTransaction().replace(R.id.fragment_view, ListFragment()).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_view, ListFragment()).commit()
 //                open side bar
-                    drawerLayout.openDrawer(GravityCompat.START)
+//                    drawerLayout.openDrawer(GravityCompat.START)
                     true
                 }
 

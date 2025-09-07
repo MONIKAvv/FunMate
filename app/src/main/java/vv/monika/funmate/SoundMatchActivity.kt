@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.first
 import vv.monika.funmate.data.LocalQuestionRepository
 import vv.monika.funmate.databinding.ActivitySoundMatchBinding
 import vv.monika.funmate.model.ScoreViewModel
@@ -20,24 +21,67 @@ class SoundMatchActivity : AppCompatActivity() {
     private var hasAnswered = false
     private var currentQuestion: QuestionsItem? = null
 
+    //    limits questions
+    private var practiceMode = false
+    private var dailyTotalQuestions = 2
+    private var isLimitAlertShown = false
+    private var currentIndex = 0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivitySoundMatchBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
+
+        val subject = "Sound"
+        reFreshDailyCount(this, subject)
 
         val repo = LocalQuestionRepository(this, "sound_questions.json")
         vm.initIfNeeded(repo, Subjects = "Sound")
-
-lifecycleScope.launchWhenStarted {
-    scoreVM.score.collect { score ->
-        binding.totalCoin.text = "$score"
-    }
-}
-
         setUpListener()
-        loadNextQuestion()
+
+        lifecycleScope.launchWhenStarted {
+            scoreVM.score.collect { score ->
+                binding.totalCoin.text = "$score"
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            val today = getTodayDate()
+            val dateKey = getDateKey(subject)
+            val countKey = getCountKey(subject)
+            val prefs = applicationContext.dataStore.data.first()
+            val lastDate = prefs[dateKey] ?: ""
+            val count = prefs[countKey] ?: 0
+
+            currentIndex = if (lastDate == today) count else 0
+            practiceMode = currentIndex >= dailyTotalQuestions
+
+            if (practiceMode) {
+                showDailyLimitReachedOnce()
+            }
+            loadNextQuestion()
+            binding.currentQue.text = "$currentIndex / $dailyTotalQuestions"
+        }
+
+
+    }
+
+    private fun showDailyLimitReachedOnce() {
+        if (isLimitAlertShown) return
+        isLimitAlertShown = true
+        showDailyLimitReached()
+    }
+
+    private fun showDailyLimitReached() {
+        hideHint()
+        CustomAlert.showCustomAlert(
+            context = this,
+            type = AlertType.CONGRATULATION,
+            title = "Completed!",
+            description = "You reached to your daily limit \n Please visit next day! \n or you can practice here",
+            onNextClick = { finish() }
+        )
 
     }
 
@@ -45,30 +89,17 @@ lifecycleScope.launchWhenStarted {
         hideHint()
 
         val q = vm.next()
-        if (q == null) {
-            binding.questionTextview.text = "Finished!"
-            CustomAlert.showCustomAlert(
-                context = this,
-                type = AlertType.CONGRATULATION,
-                title = "Completed!",
-                description = "You reached to your daily limit \n Please visit next day!",
-                onNextClick = { finish() }
-            )
-            return
-        }
         hasAnswered = false
         currentQuestion = q as QuestionsItem?
 
-        binding.questionTextview.text = q.Question
-        binding.optionA.text = q.OptionA
-        binding.optionB.text = q.OptionB
-        binding.optionC.text = q.OptionC
-        binding.optionD.text = q.OptionD
+        binding.questionTextview.text = q?.Question
+        binding.optionA.text = q?.OptionA
+        binding.optionB.text = q?.OptionB
+        binding.optionC.text = q?.OptionC
+        binding.optionD.text = q?.OptionD
 
         val (currentIndex, total) = vm.progress()
-        binding.currentQue.text = currentIndex.toString()
-        binding.totalQue.text = total.toString()
-        binding.hintBubble.text = q.Hint ?: ""
+        binding.hintBubble.text = q?.Hint ?: ""
         setOptionsEnabled(true)
 
     }
@@ -84,6 +115,7 @@ lifecycleScope.launchWhenStarted {
         binding.optionD.setOnClickListener { selectOption("D") }
 
     }
+
     private fun setOptionsEnabled(enabled: Boolean) {
         binding.optionA.isEnabled = enabled
         binding.optionB.isEnabled = enabled
@@ -92,35 +124,71 @@ lifecycleScope.launchWhenStarted {
     }
 
     private fun selectOption(index: String) {
+        if (hasAnswered) return
+        hasAnswered = true
+        setOptionsEnabled(false)
         val q = currentQuestion ?: return
         val correct = q.AnswerIndex
         val isCorrect = (index == correct)
 
-if(isCorrect){
+        val wasUnderLimit = !practiceMode
 
-}
-
-        CustomAlert.showCustomAlert(
-            context = this,
-            type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
-            title = if (isCorrect) "Correct! 🎉" else "Wrong Answer ❌",
-            description = if (isCorrect) "Well done!" else "Correct was: $correct",
-            onNextClick = {
-                Congrats.showCongratsAlert(
-                    context = this,
-                    onClaimClick = {
-                        scoreVM.addScore(+1)
-                        // Back to MathActivity → load next question
-                        hasAnswered = false
-                        setOptionsEnabled(true)
-                        loadNextQuestion()
-                    }, 10000
-                )
-            },
-            onCloseClick = {
-//                apply has answered things
+        if (isCorrect && wasUnderLimit) {
+            currentIndex++
+            lifecycleScope.launchWhenStarted {
+                incrementQuestionCount(this@SoundMatchActivity, "Sound")
             }
-        )
+
+        }
+        val nowReachedOrOverLimit = currentIndex >= dailyTotalQuestions
+        if (wasUnderLimit){
+            CustomAlert.showCustomAlert(
+                context = this,
+                type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
+                title = if (isCorrect) "Correct!" else "Wrong Answer",
+                description = if (isCorrect) "Well done! 🎉" else "Try again! 💪",
+                onNextClick = {
+                    Congrats.showCongratsAlert(
+                        context = this,
+                        onClaimClick = {
+                            if (isCorrect) scoreVM.addScore(+1) // coins only under limit
+                            binding.currentQue.text = "${currentIndex} / $dailyTotalQuestions"
+                            hideHint()
+
+                            // Agar abhi limit hit ho gayi to practice mode me shift karo
+                            if (nowReachedOrOverLimit) {
+                                practiceMode = true
+                                showDailyLimitReachedOnce()
+                            }
+
+                            loadNextQuestion()
+                            hasAnswered = false
+                        },
+                        10000
+                    )
+                },
+                onCloseClick = {
+                    hasAnswered = false
+                    setOptionsEnabled(true)
+                }
+            )
+        }else{
+            CustomAlert.showCustomAlert(
+                context = this,
+                type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
+                title = if (isCorrect) "Correct!" else "Wrong Answer",
+                description = if (isCorrect) "Well done! 🎉" else "Try again! 💪",
+                onNextClick = {
+                    loadNextQuestion() // keep practicing
+                    hasAnswered = false
+//                    showDailyLimitReached() this will again and again dailyLimitREached Popup
+                },
+                onCloseClick = {
+                    hasAnswered = false
+                    setOptionsEnabled(true)
+                }
+            )
+        }
 
     }
 

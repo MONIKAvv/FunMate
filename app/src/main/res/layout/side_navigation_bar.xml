@@ -5,13 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/background_screen"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:openDrawer="start">
 
     <com.google.android.material.navigation.NavigationView
         android:layout_width="670dp"
-        android:layout_height="800dp"
+        android:layout_height="760dp"
         android:layout_gravity="start"
         android:layout_marginStart="50dp"
         app:itemIconPadding="30dp"
@@ -22,9 +23,5 @@
         >
 
     </com.google.android.material.navigation.NavigationView>
-
-
-
-
 </androidx.drawerlayout.widget.DrawerLayout>
 

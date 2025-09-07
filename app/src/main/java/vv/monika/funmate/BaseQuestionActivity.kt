@@ -197,7 +197,6 @@ abstract class BaseQuestionActivity : AppCompatActivity() {
         if (currentQuestionIndex < questions.size) {
             binding.apply {
                 currentQue.text = currentQuestionIndex.toString()
-                totalQue.text = questions.size.toString()
             }
             displayCurrentQuestion()
         } else {
