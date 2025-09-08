@@ -81,7 +81,7 @@ object GameNotifier {
 
     private fun showFailedState() {
         titleView?.text = "Failed!"
-        messageView?.text = "You tried to claim before the timer finished."
+        messageView?.text = "You missed it, Try again!"
         iconView?.setImageResource(R.drawable.wrong_icon)
         claimButton?.visibility = View.GONE
         timerText?.visibility = View.GONE

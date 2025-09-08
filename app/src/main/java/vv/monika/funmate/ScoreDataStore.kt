@@ -41,6 +41,9 @@ fun getTodayDate(): String {
     val sdf = SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
     return sdf.format(Date())
 }
+fun getCheckInDateKey(): String{
+    return "checkin_date"
+}
 
 //generate dynamic keys per sbject
 fun getDateKey(subject: String) = stringPreferencesKey("${subject}_date")

@@ -95,7 +95,7 @@
         app:layout_constraintTop_toBottomOf="@+id/current_que" />
 
     <ImageView
-        android:id="@+id/imageView20"
+        android:id="@+id/ck_2"
         android:layout_width="90dp"
         android:layout_height="69dp"
         android:layout_marginStart="-15dp"
