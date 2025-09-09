@@ -56,6 +56,7 @@ class GameActivity : AppCompatActivity() {
     }
     private fun handleGameClick(item: GameItem) {
         Toast.makeText(this, "Clicked ${item.title}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Please wait for 30 sec", Toast.LENGTH_SHORT).show()
 
 
         // Track when user starts playing

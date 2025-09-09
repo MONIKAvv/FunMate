@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import okhttp3.internal.http2.Http2Reader
 import vv.monika.funmate.databinding.ActivityCheckInBinding
 import vv.monika.funmate.model.ScoreViewModel
+import java.util.Calendar
 import kotlin.random.Random
 
 class CheckInActivity : AppCompatActivity() {
@@ -26,23 +27,50 @@ class CheckInActivity : AppCompatActivity() {
     private val scoreVM: ScoreViewModel by viewModels()
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var boxes: List<ImageView>
+    private var  calendar = Calendar.getInstance()
+   private var dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+    private lateinit var dayIcon: List<ImageView>
+
+    private var todayIndex = when (dayOfWeek) {
+        Calendar.MONDAY -> 0
+        Calendar.TUESDAY -> 1
+        Calendar.WEDNESDAY -> 2
+        Calendar.THURSDAY -> 3
+        Calendar.FRIDAY -> 4
+        Calendar.SATURDAY -> 5
+        Calendar.SUNDAY -> 6
+        else -> 0
+    }
 
     private var currentIndex = 0
     private var totalSteps = 0
     private var stepsDone = 0
     private var delay = 100L
-    private var totalSpin = 3
+    private var totalSpin = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityCheckInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+         dayIcon = listOf(
+            binding.dIcon0,
+            binding.dIcon1,
+            binding.dIcon2,
+            binding.dIcon3,
+            binding.dIcon4,
+            binding.dIcon5,
+            binding.dIcon6,
+        )
+
         lifecycleScope.launchWhenStarted {
             scoreVM.score.collect { score ->
                 binding.totalCoin.text = "$score"
             }
         }
+        highlightToday()
+//        highlightAndShowCheckMarks()
+
         lifecycleScope.launchWhenStarted {
             val today = getTodayDate()  // same function you use in MatchFun
             val dateKey = getCheckInDateKey()
@@ -51,22 +79,19 @@ class CheckInActivity : AppCompatActivity() {
             val lastCheckIn = prefs[stringPreferencesKey(dateKey)] ?: ""
 
             if (lastCheckIn == today) {
-                if (totalSpin >=3){
-                    binding.checkInStartBtn.isEnabled = false
-                    CustomAlert.showCustomAlert(this@CheckInActivity,
-                        type = AlertType.APPROVAL,
-                        title = "Completed",
-                        description = "Your Daily CheckIn Completed, \n Please visit next day!",
-                        onNextClick = {finish()}
-                    )
-                }
-
-            } else {
+                dayIcon[todayIndex].setImageResource(R.drawable.double_check)
+                binding.checkInStartBtn.isEnabled = false
+                CustomAlert.showCustomAlert(
+                    this@CheckInActivity,
+                    type = AlertType.APPROVAL,
+                    title = "Completed",
+                    description = "Your Daily Check-In Completed, \n Please visit next day!",
+                    onNextClick = { finish() }
+                )
+            }else {
                 binding.checkInStartBtn.setOnClickListener {
-                    lifecycleScope.launch {   // ✅ Coroutine body starts here
-                        saveCheckInDate(today)
-                        startSpin()
-                    }
+                    binding.checkInStartBtn.isEnabled = false // 🚀 Immediately disable button
+                    startSpin()
                 }
             }
         }
@@ -84,6 +109,86 @@ class CheckInActivity : AppCompatActivity() {
 
 
     }
+//
+//    private fun highlightAndShowCheckMarks() {
+//        lifecycleScope.launch {
+//            // Step 1: Get today's day name
+//            val today = getTodayDate()
+//            val calendar = Calendar.getInstance()
+//            val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) // 1=Sunday
+//
+//            // Step 2: Prepare lists
+//            val dayImages = listOf(
+//                binding.imageView38, // Monday
+//                binding.imageView44, // Tuesday
+//                binding.imageView43, // Wednesday
+//                binding.imageView42, // Thursday
+//                binding.imageView41, // Friday
+//                binding.imageView40, // Saturday
+//                binding.imageView39  // Sunday
+//            )
+//
+//            val iconList = listOf(
+//                binding.monday, binding.tuesday, binding.wednesday,
+//                binding.thrusday, binding.friday, binding.saturday, binding.sunday
+//            )
+//
+//            // Reset all
+//            dayImages.forEach { it.setImageResource(R.drawable.inactive__day) }
+//
+//            // Step 3: Highlight today's day
+//            val todayIndex = when (dayOfWeek) {
+//                Calendar.MONDAY -> 0
+//                Calendar.TUESDAY -> 1
+//                Calendar.WEDNESDAY -> 2
+//                Calendar.THURSDAY -> 3
+//                Calendar.FRIDAY -> 4
+//                Calendar.SATURDAY -> 5
+//                Calendar.SUNDAY -> 6
+//                else -> 0
+//            }
+//            dayImages[todayIndex].setImageResource(R.drawable.active__day)
+//
+//            // Step 4: Get last saved check-in date
+//            val prefs = applicationContext.dataStore.data.first()
+//            val lastCheckIn = prefs[stringPreferencesKey(getCheckInDateKey())] ?: ""
+//
+//            // Step 5: If user already checked in today → show double_check
+//            if (lastCheckIn == today) {
+//                // Add double-check icon
+//                val checkIcon = ImageView(this@CheckInActivity)
+//                checkIcon.setImageResource(R.drawable.double_check)
+//                // You can also add animations here if you want
+//            }
+//        }
+//    }
+
+
+    private fun highlightToday() {
+        // Step 1: Get today's day name
+        // 1=Sunday, 2=Monday, etc.
+
+        // Step 2: Reset all days to inactive
+        val days = listOf(
+            binding.imageView38, // Monday
+            binding.imageView44, // Tuesday
+            binding.imageView43, // Wednesday
+            binding.imageView42, // Thursday
+            binding.imageView41, // Friday
+            binding.imageView40, // Saturday
+            binding.imageView39  // Sunday
+        )
+
+        days.forEach { it.setImageResource(R.drawable.inactive__day) }
+        dayIcon.forEach { it.setImageResource(R.drawable.timer) }
+
+        // Step 3: Find correct index for today
+
+
+        // Step 4: Highlight today's day
+        days[todayIndex].setImageResource(R.drawable.active__day)
+
+    }
 
     private suspend fun saveCheckInDate(today: String) {
         applicationContext.dataStore.edit { prefs ->
@@ -93,7 +198,7 @@ class CheckInActivity : AppCompatActivity() {
 
     private fun startSpin() {
 //        Reset
-        totalSpin++
+
         stepsDone = 0
         delay = 100L
         currentIndex = 0
@@ -129,6 +234,10 @@ class CheckInActivity : AppCompatActivity() {
 
     private fun onSpinComplete(finalIndex: Int) {
         var score = Random.nextInt(10, 50)
+        lifecycleScope.launch {
+            saveCheckInDate(getTodayDate())
+//            savees todays date
+        }
         CustomAlert.showCustomAlert(
             context = this,
             type = AlertType.CORRECT,
@@ -138,7 +247,11 @@ class CheckInActivity : AppCompatActivity() {
                 Congrats.showCongratsAlert(
                     context = this,
                     onClaimClick = {
+                        lifecycleScope.launch {
+                            saveCheckInDate(getTodayDate()) // ✅ Save only after claiming
+                        }
                         scoreVM.addScore(score)
+                        dayIcon[todayIndex].setImageResource(R.drawable.double_check)
                     },
                     3000
                 )
