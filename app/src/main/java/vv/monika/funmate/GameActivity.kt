@@ -21,6 +21,7 @@ import vv.monika.funmate.model.ScoreViewModel
 import kotlin.properties.ReadOnlyProperty
 
 class GameActivity : AppCompatActivity() {
+//    AppCompatActivity provides the activity ko perform backends and all
 
     private lateinit var binding: ActivityGameBinding
     private lateinit var scoreVM: ScoreViewModel
@@ -31,6 +32,8 @@ class GameActivity : AppCompatActivity() {
     companion object {
         private const val GAME_TIMER_DURATION = 30000L // 30 seconds
     }
+//     companion object -> this is used when there is something some common value or utility functions that will be same for all objects
+//     companion object variables or functions used with the classname.varibale/function
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,12 +45,14 @@ class GameActivity : AppCompatActivity() {
         scoreVM = ViewModelProvider(
             this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         ).get(ScoreViewModel::class.java)
+//its like jb mera screen rotate hota h to data lose nhi hoga, if verticle se landscpae pr aaya then it still sotes the data throw viewModel
 
         lifecycleScope.launchWhenStarted {
             scoreVM.score.collect { currentScore ->
                 binding.totalCoin.text = "$currentScore"
             }
         }
+//        updating the score as soon as the activity loaded
 
         binding.backButton.setOnClickListener { finish() }
 
@@ -64,10 +69,12 @@ class GameActivity : AppCompatActivity() {
         isGameRunning = true
 
         openCustomTab(item.url)
+//        dataclass se url leke opencustom tab ko de rha h
 
         GameNotifier.showNotification(
             context = this,
             type = AlertType.START,
+
             title = "Running",
             description = "Please wait for the timer to finish",
             onClaimClick = {
@@ -101,14 +108,16 @@ class GameActivity : AppCompatActivity() {
     }
 
 
-
+//resume is used when we want something to resume if we shifts to another place
     override fun onResume() {
         super.onResume()
         if (isGameRunning) {
             val elapsedTime = System.currentTimeMillis() - gameStartTime
+//            elapsedTime checking ki kitna time beet gya hai
             if (elapsedTime < GAME_TIMER_DURATION) {
                 // User returned too early -> mark as failed
                 GameNotifier.failEarly()
+//                if user comes before time then it shows error
                 isGameRunning = false
             }
         }
