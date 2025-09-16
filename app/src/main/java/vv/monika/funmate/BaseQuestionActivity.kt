@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import kotlinx.coroutines.Dispatchers
@@ -13,8 +12,9 @@ import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
-import vv.monika.funmate.databinding.ActivityBigvsSmallBinding
+import vv.monika.funmate.data.QuestionsItem
 import vv.monika.funmate.databinding.ActivitySoundMatchBinding
+import vv.monika.funmate.retrofit_interface.ApiServiceInterface
 
 // Base class for all subject activities
 abstract class BaseQuestionActivity : AppCompatActivity() {
@@ -68,7 +68,7 @@ abstract class BaseQuestionActivity : AppCompatActivity() {
     }
 
     protected fun fetchQuestions() {
-        val questionAPI = RetrofitBuilder.getInstance().create(MyQuestionInterface::class.java)
+        val questionAPI = RetrofitBuilder.getInstance().create(ApiServiceInterface::class.java)
         val subject = getSubjectName()
 
         showLoading(true)

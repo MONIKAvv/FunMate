@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.androidx.tracing.perfetto.handshake)
     implementation(libs.androidx.databinding.compiler)
     implementation(libs.protolite.well.known.types)
+    implementation(libs.firebase.appdistribution.gradle)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -116,5 +117,9 @@ dependencies {
 //modelview
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
+
+//    google picker
+    implementation ("com.google.android.gms:play-services-auth:20.7.0")
+
 
 }

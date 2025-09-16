@@ -1,4 +1,4 @@
-package vv.monika.funmate
+package vv.monika.funmate.data
 
 import com.google.gson.annotations.SerializedName
 

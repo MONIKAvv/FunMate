@@ -2,7 +2,7 @@ package vv.monika.funmate.ui
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import vv.monika.funmate.QuestionsItem
+import vv.monika.funmate.data.QuestionsItem
 import vv.monika.funmate.data.LocalQuestionRepository
 
 class QuestionDeckViewModel(app: Application) : AndroidViewModel(app) {

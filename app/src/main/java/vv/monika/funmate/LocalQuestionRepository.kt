@@ -3,7 +3,7 @@ package vv.monika.funmate.data
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import vv.monika.funmate.QuestionsItem
+import vv.monika.funmate.data.QuestionsItem
 import java.io.BufferedReader
 
 class LocalQuestionRepository(
