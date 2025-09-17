@@ -1,7 +1,9 @@
 package vv.monika.funmate.model
 
+import com.google.gson.annotations.SerializedName
+
 data class GoogleLoginRequest(
-    val idToken: String,
+    @SerializedName("id_token") val idToken: String,
     val email: String,
     val name: String,
 )

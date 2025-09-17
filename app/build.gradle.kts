@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services") version "4.4.3" apply false
+
 }
 
 
@@ -15,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "vv.monika.funmate"
-        minSdk = 22
+        minSdk = 23
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -57,7 +59,6 @@ android {
 
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -70,16 +71,17 @@ dependencies {
     implementation(libs.androidx.cardview)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.gridlayout)
     implementation(libs.androidx.tracing.perfetto.handshake)
-    implementation(libs.androidx.databinding.compiler)
     implementation(libs.protolite.well.known.types)
-    implementation(libs.firebase.appdistribution.gradle)
+    implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -88,38 +90,38 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation ("androidx.navigation:navigation-fragment-ktx:2.7.7")
-    implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
-    implementation ("com.google.android.material:material:1.11.0")
 
+    implementation(platform("com.google.firebase:firebase-bom:34.2.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    // ✅ Navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 
-    implementation ("androidx.recyclerview:recyclerview:1.3.0")
-    implementation ("com.google.android.material:material:1.9.0")
-//lottie animation dependency
-    implementation ("com.airbnb.android:lottie:6.0.0")
+    // ✅ Material (sirf ek rakho)
+    implementation("com.google.android.material:material:1.11.0")
 
-//retrofit for api calling
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    // ✅ RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
 
-    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    // ✅ Lottie Animation
+    implementation("com.airbnb.android:lottie:6.0.0")
 
-    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    // ✅ Retrofit + OkHttp + Gson
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.google.code.gson:gson:2.10.1")
 
-    implementation ("com.google.code.gson:gson:2.10.1")
+    // ✅ DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
-//    dependencies for custom tab
-    implementation ("androidx.browser:browser:1.5.0")
+    // ✅ Browser Custom Tabs
+    implementation("androidx.browser:browser:1.5.0")
 
-//modelview
+    // ✅ ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
-    implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
-//    google picker
-    implementation ("com.google.android.gms:play-services-auth:20.7.0")
-
-
+    // ✅ Google Sign-In
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 }

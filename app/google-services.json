@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1012203157872",
+    "project_id": "chat-bot-app-fee36",
+    "storage_bucket": "chat-bot-app-fee36.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012203157872:android:13c60c7422c522b65e37b5",
+        "android_client_info": {
+          "package_name": "vv.monika.funmate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1012203157872-hu9uvrj2k7plh5654h80udairqfqek08.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4JLFYscl75LS6llU2yGOI-nFzXZ1aeuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012203157872-hu9uvrj2k7plh5654h80udairqfqek08.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,21 +3,23 @@ package vv.monika.funmate
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Html
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.auth.api.credentials.IdToken
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import vv.monika.funmate.databinding.ActivityLoginBinding
 import vv.monika.funmate.model.GoogleLoginRequest
-import java.lang.Exception
+import vv.monika.funmate.model.GoogleLoginResponse
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -29,62 +31,76 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        configure google signin
+        // ✅ Configure Google SignIn
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail().build()
+            .requestIdToken(getString(R.string.default_web_client_id)) // from google-services.json
+            .requestEmail()
+            .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
+        // ✅ Google SignIn button click
         binding.googleButton.setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
-            startActivityForResult(signInIntent, 100)
+            signInLauncher.launch(signInIntent) // no request code needed
+            Log.d("Login", "ID Token: setonclick listener")
         }
 
         binding.continueButton.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
-
-//        Retrofit implementation for login
-
-
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == 100) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+    // ✅ ActivityResultLauncher for Google SignIn
+    private val signInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            Log.d("Login", "ID Token: sSigninLauncher")
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             try {
                 val account = task.getResult(ApiException::class.java)
                 val idToken = account.idToken
                 val email = account.email
                 val name = account.displayName
 
-//                send this data to php backend
-                sendGoogleLoginToServer(idToken!!, email!!, name!!)
+                Log.d("Login", "ID Token: $idToken, Email: $email, Name: $name")
+
+                // send data to PHP backend
+                if (idToken != null && email != null && name != null) {
+                    sendGoogleLoginToServer(idToken, email, name)
+                } else {
+                    Log.d("Login", "ID Token: signinLauncher else part")
+                    Toast.makeText(this, "Missing account info!", Toast.LENGTH_SHORT).show()
+                }
+
             } catch (e: ApiException) {
-                Toast.makeText(this, "Goodle Sign-In failed : ${e.message}", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Google Sign-In failed: ${e.message}", Toast.LENGTH_SHORT)
                     .show()
             }
         }
     }
 
-    private fun sendGoogleLoginToServer(
-        idToken: String,
-        email: String,
-        name: String
-    ) {
+    // ✅ Send token to PHP backend using Retrofit
+    private fun sendGoogleLoginToServer(idToken: String, email: String, name: String) {
         lifecycleScope.launch {
             try {
-                val response =
-                    RetrofitInstance.api.googleLogin(GoogleLoginRequest(idToken, email, name))
+                Log.d("Login", "sendGoogleLogin to server")
+                val request = GoogleLoginRequest(
+                    idToken = idToken,
+                    email = email,
+                    name = name
+                )
+
+                val response = RetrofitBuilder.api.googleLogin(request)
 
                 if (response.isSuccessful) {
                     val body = response.body()
+                    Log.d("LoginResponse", body.toString())
+
                     if (body?.success == true) {
-                        saveToken(this@LoginActivity, body.token?: "")
+                        saveToken(this@LoginActivity, body.token ?: "")
                         startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                         finish()
                     } else {
@@ -94,21 +110,22 @@ class LoginActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                } else {
+                    Toast.makeText(this@LoginActivity, "Server Error", Toast.LENGTH_SHORT).show()
                 }
-
             } catch (e: Exception) {
-                Toast.makeText(this, "Network Error: ${e.message}", Toast.LENGTH_SHORT).show()
-
+                Toast.makeText(this@LoginActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun saveToken(context: Context, token:String) {
 
+    // ✅ Save token in SharedPreferences
+    private fun saveToken(context: Context, token: String) {
+        Log.d("Login", "ID Token: ssaveToken")
         context.getSharedPreferences("funmate_prefs", Context.MODE_PRIVATE)
-            .edit().putString("auth_token", token)
-            .apply()    }
+            .edit()
+            .putString("auth_token", token)
+            .apply()
+    }
 }
-
-
-//login -> googlepicker open -> email select -> token send -> google/db -> google token id --> app --> db store krna hai,
