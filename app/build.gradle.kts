@@ -2,13 +2,13 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.gms.google-services") version "4.4.3" apply false
+    id("com.google.gms.google-services")
 
 }
 
 
 android {
-    namespace = "vv.monika.funmate"
+    namespace = "vv.monika.funMaatee"
     compileSdk = 35
 
     buildFeatures{
@@ -16,7 +16,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "vv.monika.funmate"
+        applicationId = "vv.monika.funMaatee"
         minSdk = 23
         targetSdk = 35
         versionCode = 1
@@ -124,4 +124,10 @@ dependencies {
 
     // ✅ Google Sign-In
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+//    firebase dependencies
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
 }

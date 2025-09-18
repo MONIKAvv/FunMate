@@ -6,19 +6,19 @@
     app:startDestination="@id/homeFragment">
 
     <fragment
-        android:name="vv.monika.funmate.fragment.HomeFragment"
+        android:name="vv.monika.funMaatee.fragment.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
-        android:name="vv.monika.funmate.fragment.RecentFragment"
+        android:name="vv.monika.funMaatee.fragment.RecentFragment"
         android:label="fragment_recent"
         tools:layout="@layout/fragment_recent" />
     <fragment
-        android:name="vv.monika.funmate.fragment.walletFragment"
+        android:name="vv.monika.funMaatee.fragment.walletFragment"
         android:label="fragment_wallet"
         tools:layout="@layout/fragment_wallet" />
     <fragment
-        android:name="vv.monika.funmate.fragment.ListFragment"
+        android:name="vv.monika.funMaatee.fragment.ListFragment"
         android:label="fragment_list"
         tools:layout="@layout/fragment_list" />
 </navigation>

@@ -1,33 +1,42 @@
 {
   "project_info": {
-    "project_number": "1012203157872",
-    "project_id": "chat-bot-app-fee36",
-    "storage_bucket": "chat-bot-app-fee36.firebasestorage.app"
+    "project_number": "3159424073",
+    "firebase_url": "https://funmate-4d874-default-rtdb.firebaseio.com",
+    "project_id": "funmate-4d874",
+    "storage_bucket": "funmate-4d874.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1012203157872:android:13c60c7422c522b65e37b5",
+        "mobilesdk_app_id": "1:3159424073:android:b203fd4e07885eb8fd9398",
         "android_client_info": {
-          "package_name": "vv.monika.funmate"
+          "package_name": "vv.monika.funMaatee"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1012203157872-hu9uvrj2k7plh5654h80udairqfqek08.apps.googleusercontent.com",
+          "client_id": "3159424073-shh99qo2c24en7sb91ndmj5q3170ubde.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vv.monika.funMaatee",
+            "certificate_hash": "c935495bf47c20f02e644ceb4f7f3e2a8d4d6e09"
+          }
+        },
+        {
+          "client_id": "3159424073-8gkkf4e9pg778fbki7pr0395fv3hjl45.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB4JLFYscl75LS6llU2yGOI-nFzXZ1aeuM"
+          "current_key": "AIzaSyCmnshWaO8UioI4acDpeLibUVJlhQGnWVA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1012203157872-hu9uvrj2k7plh5654h80udairqfqek08.apps.googleusercontent.com",
+              "client_id": "3159424073-7p5h1oh3j2v3ou9579h4umktfe2s2eli.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

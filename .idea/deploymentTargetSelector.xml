@@ -8,15 +8,6 @@
       <SelectionState runConfigName="BigvsSmallActivity (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="SoundMatchActivity">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="BaseQuestionActivity">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="SoundMatchActivity (1)">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="MatchFunActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
