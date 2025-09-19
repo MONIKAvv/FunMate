@@ -8,16 +8,13 @@ import vv.monika.funMaatee.retrofit_interface.ApiServiceInterface
 import java.util.concurrent.TimeUnit
 
 object RetrofitBuilder {
-    private const val API = "http://192.168.1.44/myapi/"
-
+    private const val BASE_URL = "https://app.monikaandroidfunmate/myapi/"  // 👈 yaha sirf base url
 
     private val retrofit: Retrofit by lazy {
-        // Logging interceptor
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
-        // OkHttp client with timeouts
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(logging)
             .connectTimeout(15, TimeUnit.SECONDS)
@@ -27,14 +24,14 @@ object RetrofitBuilder {
             .build()
 
         Retrofit.Builder()
-            .baseUrl(API)
+            .baseUrl(BASE_URL)  // 👈domain name
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    // ✅ API interface instance
     val api: ApiServiceInterface by lazy {
         retrofit.create(ApiServiceInterface::class.java)
     }
 }
+

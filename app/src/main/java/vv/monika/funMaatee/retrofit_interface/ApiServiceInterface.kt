@@ -1,19 +1,22 @@
 package vv.monika.funMaatee.retrofit_interface
 
-import retrofit2.Response
-import retrofit2.http.Body
+import retrofit2.Call
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Headers
 import retrofit2.http.POST
-import vv.monika.funMaatee.model.GoogleLoginRequest
-import vv.monika.funMaatee.model.GoogleLoginResponse
 
 interface ApiServiceInterface {
 
-    @Headers("Content-Type: application/json")
+//    @Headers("Content-Type: application/json")
+@FormUrlEncoded
     @POST("google_login.php")
-    suspend fun googleLogin(
-        @Body request: GoogleLoginRequest
-    ): Response<GoogleLoginResponse>
+ fun googleLogin(
+        @Field("uid") uid: String,
+        @Field("name") name: String?,
+        @Field("email") email: String?,
+        @Field("device_id") deviceId: String
+    ): Call<String>
 
 }
 
