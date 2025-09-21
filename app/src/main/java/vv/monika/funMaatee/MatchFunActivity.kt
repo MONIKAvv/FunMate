@@ -1,12 +1,20 @@
 package vv.monika.funMaatee
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.first
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Response
 import vv.monika.funMaatee.data.MathsQuestion
 import vv.monika.funMaatee.databinding.ActivityMatchFunBinding
 import vv.monika.funMaatee.model.ScoreViewModel
@@ -38,7 +46,7 @@ class MatchFunActivity : AppCompatActivity() {
         binding = ActivityMatchFunBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val subject = "Math"
+        val subject = "mathfun"
         reFreshDailyCount(this, subject)
 
         setupListeners()
@@ -161,8 +169,13 @@ class MatchFunActivity : AppCompatActivity() {
                     Congrats.showCongratsAlert(
                         context = this,
                         onClaimClick = {
-                            if (isCorrect) scoreVM.addScore(+1) // coins only under limit
+                            if (isCorrect){
+                                scoreVM.addScore(+1)
+                                saveUserDataToServer()
+                            }
+                                // coins only under limit
                             binding.currentQue.text = "${currentIndex} / $dailyTotalQuestions"
+
                             hideHint()
 
                             // Agar abhi limit hit ho gayi to practice mode me shift karo
@@ -192,7 +205,7 @@ class MatchFunActivity : AppCompatActivity() {
                 onNextClick = {
                     loadNextQuestion() // keep practicing
                     hasAnswered = false
-//                    showDailyLimitReached() this will again and again dailyLimitREached Popup
+//                    showDailyLimitReached() this will again and again dailyLimitReached Popup
                 },
                 onCloseClick = {
                     hasAnswered = false
@@ -200,6 +213,70 @@ class MatchFunActivity : AppCompatActivity() {
                 }
             )
         }
+    }
+
+    private fun saveUserDataToServer() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        if(currentUser == null){
+            Log.d("Tag", "User not authorized ")
+            return
+        }
+
+        val coins = 1
+
+        val json = JSONObject().apply {
+            put("uid", currentUser.uid)
+            put("name", currentUser.displayName ?: "Unknown")
+            put("email", currentUser.email ?: "")
+            put("device_id", android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID))
+            put("coins", 1) // Send +1 coin increment
+            put("subject", "mathfun") // THIS IS KEY - specify the subject
+            put("daily_limits", currentIndex) // Current progress for Math
+            // Remove idToken and dailyLimits - not needed
+        }
+        Log.d("Tag", "sending math data: $json")
+
+        val body = RequestBody.create(
+            "application/json".toMediaTypeOrNull(),
+            json.toString()
+        )
+        RetrofitBuilder.api.SaveUserData(body).enqueue(object : retrofit2.Callback<ResponseBody> {
+            override fun onResponse(call: retrofit2.Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
+                try {
+                    if (response.isSuccessful) {
+                        val responseString = response.body()?.string() ?: ""
+                        Log.d("SERVER_SUCCESS", "Math data saved: $responseString")
+
+                        if (responseString.isNotEmpty()) {
+                            val responseJson = JSONObject(responseString)
+                            val success = responseJson.getBoolean("success")
+
+                            if (success) {
+                                val userData = responseJson.getJSONObject("user")
+                                val totalCoins = userData.getInt("coins")
+                                val mathLimit = userData.getInt("daily_limits")
+
+                                Log.d("SERVER_SUCCESS", "Total Coins: $totalCoins, Math Progress: $mathLimit")
+                            } else {
+                                val message = responseJson.getString("message")
+                                Log.e("SERVER_ERROR", "Save failed: $message")
+                            }
+                        }
+                    } else {
+                        val errorString = response.errorBody()?.string() ?: "Unknown error"
+                        Log.e("SERVER_ERROR", "HTTP Error ${response.code()}: $errorString")
+                    }
+                } catch (e: Exception) {
+                    Log.e("SERVER_ERROR", "Exception: ${e.message}")
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                Log.e("SERVER_ERROR", "Network failure: ${t.message}")
+            }
+        })
+
     }
 
     private fun loadNextQuestion() {

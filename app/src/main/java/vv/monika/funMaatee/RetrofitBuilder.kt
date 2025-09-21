@@ -8,7 +8,7 @@ import vv.monika.funMaatee.retrofit_interface.ApiServiceInterface
 import java.util.concurrent.TimeUnit
 
 object RetrofitBuilder {
-    private const val BASE_URL = "https://app.monikaandroidfunmate/myapi/"  // 👈 yaha sirf base url
+    private const val BASE_URL = "https://base-cherry-den-rica.trycloudflare.com/myapi/"  // 👈 yaha sirf base url
 
     private val retrofit: Retrofit by lazy {
         val logging = HttpLoggingInterceptor().apply {
@@ -30,8 +30,6 @@ object RetrofitBuilder {
             .build()
     }
 
-    val api: ApiServiceInterface by lazy {
-        retrofit.create(ApiServiceInterface::class.java)
-    }
+    val api: ApiServiceInterface = retrofit.create(ApiServiceInterface::class.java)
 }
 

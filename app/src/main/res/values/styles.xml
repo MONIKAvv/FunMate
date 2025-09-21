@@ -1,3 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- your existing styles -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- customize app theme -->
+    </style>
+
+    <!-- TopSheet Theme -->
+    <style name="TopSheetDialogTheme" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="android:windowAnimationStyle">@style/TopSheetAnim</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+    </style>
+
+    <!-- Animation for TopSheet -->
+    <style name="TopSheetAnim">
+        <item name="android:windowEnterAnimation">@anim/slide_in_top</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_top</item>
+    </style>
+
 </resources>

@@ -1,12 +1,18 @@
 package vv.monika.funMaatee
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.first
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import org.json.JSONObject
 import vv.monika.funMaatee.data.AlphabetFunQuestion
 import vv.monika.funMaatee.databinding.ActivityAlphabetFunBinding
 import vv.monika.funMaatee.model.ScoreViewModel
@@ -15,6 +21,7 @@ import kotlin.getValue
 class AlphabetFunActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAlphabetFunBinding
+
     //    fragment me activityViewModels hota h esme yesa hi h
     private val scoreVM: ScoreViewModel by viewModels()
     private var isLimitAlertShown = false
@@ -29,13 +36,14 @@ class AlphabetFunActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityAlphabetFunBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val subject = "AlphabetFun"
+        val subject = "alphabetfun"
         reFreshDailyCount(this, subject)
 
         setUpListeners()
         lifecycleScope.launchWhenStarted {
             scoreVM.score.collect { score ->
                 binding.totalCoin.text = "$score"
+
             }
         }
 
@@ -45,13 +53,13 @@ class AlphabetFunActivity : AppCompatActivity() {
             val dateKey = getDateKey(subject)
             val countKey = getCountKey(subject)
             val prefs = applicationContext.dataStore.data.first()
-            val lastDate = prefs[dateKey]?: ""
-            val count = prefs[countKey]?: 0
+            val lastDate = prefs[dateKey] ?: ""
+            val count = prefs[countKey] ?: 0
 
             currentIndex = if (lastDate == today) count else 0
             practiceMode = currentIndex >= totalQuestions
 
-            if (practiceMode){
+            if (practiceMode) {
                 showDailyLimitReached()
             }
             loadNextQuestion()
@@ -77,16 +85,17 @@ class AlphabetFunActivity : AppCompatActivity() {
 
         val isCorrect = index == currentQuestion.correctIndex
         val wasUnderLimit = !practiceMode
+
         if (isCorrect && wasUnderLimit) {
             currentIndex++
-
             lifecycleScope.launchWhenStarted {
                 incrementQuestionCount(this@AlphabetFunActivity, "AlphabetFun")
             }
         }
-        val nowReachedOrOverLimit = currentIndex >= totalQuestions
-        if (wasUnderLimit) {
 
+        val nowReachedOrOverLimit = currentIndex >= totalQuestions
+
+        if (wasUnderLimit) {
             CustomAlert.showCustomAlert(
                 context = this,
                 type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
@@ -96,11 +105,15 @@ class AlphabetFunActivity : AppCompatActivity() {
                     Congrats.showCongratsAlert(
                         context = this,
                         onClaimClick = {
-                            if (isCorrect) scoreVM.addScore(+1) // coins only under limit
+                            if (isCorrect) {
+                                scoreVM.addScore(+1)
+                                // Then save to server with the updated score
+                                saveUserDataToPhpMySQL()
+                            }
+
                             binding.currentQue.text = "${currentIndex} / $totalQuestions"
                             hideHint()
 
-                            // Agar abhi limit hit ho gayi to practice mode me shift karo
                             if (nowReachedOrOverLimit) {
                                 practiceMode = true
                                 showDailyLimitReachedOnce()
@@ -115,9 +128,10 @@ class AlphabetFunActivity : AppCompatActivity() {
                 onCloseClick = {
                     hasAnswered = false
                     setOptionsEnabled(true)
-                },
+                }
             )
-        } else{
+        } else {
+            // Practice mode - no score/server update
             CustomAlert.showCustomAlert(
                 context = this,
                 type = if (isCorrect) AlertType.CORRECT else AlertType.WRONG,
@@ -133,7 +147,6 @@ class AlphabetFunActivity : AppCompatActivity() {
                 }
             )
         }
-
     }
 
     private fun loadNextQuestion() {
@@ -198,6 +211,7 @@ class AlphabetFunActivity : AppCompatActivity() {
         binding.optionC.isEnabled = enabled
         binding.optionD.isEnabled = enabled
     }
+
     private var isHintVisible = false
     private fun toggleHint() {
         if (isHintVisible) hideHint() else showHint()
@@ -227,11 +241,13 @@ class AlphabetFunActivity : AppCompatActivity() {
             .start()
         isHintVisible = false
     }
-    private fun showDailyLimitReachedOnce(){
+
+    private fun showDailyLimitReachedOnce() {
         if (isLimitAlertShown) return
         isLimitAlertShown = true
         showDailyLimitReached()
     }
+
     private fun showDailyLimitReached() {
         hideHint()
         CustomAlert.showCustomAlert(
@@ -242,4 +258,78 @@ class AlphabetFunActivity : AppCompatActivity() {
             onNextClick = { }
         )
     }
+
+    private fun saveUserDataToPhpMySQL() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        if (currentUser == null) {
+            Log.e("API_ERROR", "User not authenticated")
+            return
+        }
+
+        scoreVM.addScore(+1) // Add score first
+        val coins = 1
+
+
+        // Create simplified JSON - no token needed since you're already authenticated
+        val json = JSONObject().apply {
+            put("uid", currentUser.uid)
+            put("name", currentUser.displayName ?: "Unknown")
+            put("email", currentUser.email ?: "")
+            put("device_id", android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID))
+            put("coins", 1) // Send +1 coin increment (fixed value)
+            put("dailyLimits", currentIndex) // Current progress
+            put("subject", "alphabetfun")
+        }
+
+        Log.d("API_REQUEST", "Sending: $json")
+
+        val body = RequestBody.create(
+            "application/json".toMediaTypeOrNull(),
+            json.toString()
+        )
+
+        RetrofitBuilder.api.SaveUserData(body).enqueue(object : retrofit2.Callback<ResponseBody> {
+            override fun onResponse(call: retrofit2.Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
+                try {
+                    if (response.isSuccessful) {
+                        val responseString = response.body()?.string() ?: ""
+                        Log.d("API_SUCCESS", "Response: $responseString")
+
+                        if (responseString.isNotEmpty()) {
+                            val responseJson = JSONObject(responseString)
+                            val success = responseJson.getBoolean("success")
+
+                            if (success) {
+                                val userData = responseJson.getJSONObject("user")
+                                val totalCoins = userData.getInt("coins")
+                                val limits = userData.getInt("dailyLimits")
+
+                                Log.d("API_SUCCESS", "Saved! Total Coins: $totalCoins, Progress: $limits")
+
+                                // Update UI with server data if needed
+                                runOnUiThread {
+                                    // scoreVM.updateScore(totalCoins) // if you want to sync with server
+                                }
+                            } else {
+                                val message = responseJson.getString("message")
+                                Log.e("API_ERROR", "Save failed: $message")
+                            }
+                        }
+                    } else {
+                        val errorString = response.errorBody()?.string() ?: "Unknown error"
+                        Log.e("API_ERROR", "HTTP Error ${response.code()}: $errorString")
+                    }
+                } catch (e: Exception) {
+                    Log.e("API_ERROR", "Exception: ${e.message}")
+                    e.printStackTrace()
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                Log.e("API_ERROR", "Network failure: ${t.message}")
+            }
+        })
+    }
+
 }

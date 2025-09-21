@@ -46,7 +46,7 @@ object CustomAlert {
             AlertType.WRONG -> icon.setImageResource(R.drawable.wrong_icon)
             AlertType.CORRECT -> icon.setImageResource(R.drawable.correct_icon)
             AlertType.START -> icon.setImageResource(R.drawable.correct_icon)
-            AlertType.APPROVAL -> icon.setImageResource(R.drawable.correct_icon)
+            AlertType.APPROVAL -> icon.setImageResource(R.drawable.wrong_icon)
             AlertType.CONGRATULATION -> icon.setImageResource(R.drawable.correct_icon)
         }
 

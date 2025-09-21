@@ -1,5 +1,7 @@
 package vv.monika.funMaatee.fragment
 
+import TopSheetDialogFragment
+import android.content.Context
 import android.content.Intent
 import android.view.animation.Animation
 import android.os.Bundle
@@ -8,15 +10,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.ScaleAnimation
+import android.widget.Toast
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.rememberSwipeToDismissBoxState
+import com.google.firebase.auth.FirebaseAuth
+import vv.monika.funMaatee.AlertType
 import vv.monika.funMaatee.AlphabetFunActivity
 import vv.monika.funMaatee.BigvsSmallActivity
 import vv.monika.funMaatee.CheckInActivity
+import vv.monika.funMaatee.Congrats
+import vv.monika.funMaatee.CustomAlert
 import vv.monika.funMaatee.GameActivity
 import vv.monika.funMaatee.InviteActivity
+import vv.monika.funMaatee.LoginActivity
 import vv.monika.funMaatee.MatchFunActivity
 import vv.monika.funMaatee.PromoActivity
 import vv.monika.funMaatee.SoundMatchActivity
 import vv.monika.funMaatee.databinding.FragmentHomeBinding
+import vv.monika.funMaatee.databinding.FragmentTopSheetBinding
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -31,7 +42,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentHomeBinding.inflate(layoutInflater, container,false)
+        binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
 
         binding.checkIn.setOnClickListener {
             it.startAnimation(createScaleAnimation())
@@ -60,11 +71,24 @@ class HomeFragment : Fragment() {
         }
         binding.invite.setOnClickListener {
             it.startAnimation(createScaleAnimation())
-            startActivity(Intent(requireContext(), InviteActivity::class.java))
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            if (currentUser != null) {
+                startActivity(Intent(requireContext(), InviteActivity::class.java))
+            } else {
+              showLogin()
+            }
+
+
         }
         binding.promo.setOnClickListener {
             it.startAnimation(createScaleAnimation())
-            startActivity(Intent(requireContext(), PromoActivity::class.java))
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            if(currentUser != null){
+                startActivity(Intent(requireContext(), PromoActivity::class.java))
+            }else{
+                showLogin()
+            }
+
         }
 
 
@@ -72,6 +96,7 @@ class HomeFragment : Fragment() {
 
         return binding.root
     }
+
     private fun createScaleAnimation(): ScaleAnimation {
         return ScaleAnimation(
             1f, 1.2f,
@@ -84,6 +109,11 @@ class HomeFragment : Fragment() {
             repeatMode = Animation.REVERSE
             repeatCount = 1
         }
+    }
+
+    private fun showLogin(){
+        TopSheetDialogFragment().show(parentFragmentManager, "TopSheet")
+//        TopSheetDialogFragment().show(supportFragmentManager, "TopSheet") for activity
     }
 
 }
