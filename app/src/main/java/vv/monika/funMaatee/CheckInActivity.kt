@@ -3,6 +3,7 @@ package vv.monika.funMaatee
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -10,8 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import org.json.JSONObject
 import vv.monika.funMaatee.databinding.ActivityCheckInBinding
 import vv.monika.funMaatee.model.ScoreViewModel
 import java.util.Calendar
@@ -243,9 +249,13 @@ class CheckInActivity : AppCompatActivity() {
                     context = this,
                     onClaimClick = {
                         lifecycleScope.launch {
-                            saveCheckInDate(getTodayDate()) // ✅ Save only after claiming
+
+                            saveCheckInDate(getTodayDate())
+
+                        // ✅ Save only after claiming
                         }
                         scoreVM.addScore(score)
+                        saveUserDataToServer(score)
                         dayIcon[todayIndex].setImageResource(R.drawable.double_check)
                     },
                     3000
@@ -256,4 +266,67 @@ class CheckInActivity : AppCompatActivity() {
         )
 //        add score
     }
+
+    private fun saveUserDataToServer(score: kotlin.Int) {
+            val currentUser = FirebaseAuth.getInstance().currentUser
+
+            if(currentUser == null){
+                Log.d("Tag", "User not authorized ")
+                return
+            }
+
+            val json = JSONObject().apply {
+                put("uid", currentUser.uid)
+                put("name", currentUser.displayName ?: "Unknown")
+                put("email", currentUser.email ?: "")
+                put("device_id", android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID))
+                put("coins", score) // Send +1 coin increment
+                put("subject", "dailycheckin") // THIS IS KEY - specify the subject
+                put("daily_limits", totalSpin) // Current progress for Math
+                // Remove idToken and dailyLimits - not needed
+            }
+            Log.d("Tag", "sending math data: $json")
+
+            val body = RequestBody.create(
+                "application/json".toMediaTypeOrNull(),
+                json.toString()
+            )
+            RetrofitBuilder.api.SaveUserData(body).enqueue(object : retrofit2.Callback<ResponseBody> {
+                override fun onResponse(call: retrofit2.Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
+                    try {
+                        if (response.isSuccessful) {
+                            val responseString = response.body()?.string() ?: ""
+                            Log.d("SERVER_SUCCESS", "Math data saved: $responseString")
+
+                            if (responseString.isNotEmpty()) {
+                                val responseJson = JSONObject(responseString)
+                                val success = responseJson.getBoolean("success")
+
+                                if (success) {
+                                    val userData = responseJson.getJSONObject("user")
+                                    val totalCoins = userData.getInt("coins")
+                                    val dailycheckinLimit = userData.getInt("daily_limits")
+
+                                    Log.d("SERVER_SUCCESS", "Total Coins: $totalCoins, daily checkin Progress: $dailycheckinLimit")
+                                } else {
+                                    val message = responseJson.getString("message")
+                                    Log.e("SERVER_ERROR", "Save failed: $message")
+                                }
+                            }
+                        } else {
+                            val errorString = response.errorBody()?.string() ?: "Unknown error"
+                            Log.e("SERVER_ERROR", "HTTP Error ${response.code()}: $errorString")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("SERVER_ERROR", "Exception: ${e.message}")
+                    }
+                }
+
+                override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                    Log.e("SERVER_ERROR", "Network failure: ${t.message}")
+                }
+            })
+
+        }
+
 }

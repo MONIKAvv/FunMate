@@ -223,8 +223,6 @@ class MatchFunActivity : AppCompatActivity() {
             return
         }
 
-        val coins = 1
-
         val json = JSONObject().apply {
             put("uid", currentUser.uid)
             put("name", currentUser.displayName ?: "Unknown")

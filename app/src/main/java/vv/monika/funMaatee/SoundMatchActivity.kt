@@ -1,12 +1,18 @@
 package vv.monika.funMaatee
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.first
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import org.json.JSONObject
 import vv.monika.funMaatee.data.LocalQuestionRepository
 import vv.monika.funMaatee.data.QuestionsItem
 import vv.monika.funMaatee.databinding.ActivitySoundMatchBinding
@@ -24,7 +30,7 @@ class SoundMatchActivity : AppCompatActivity() {
 
     //    limits questions
     private var practiceMode = false
-    private var dailyTotalQuestions = 2
+    private var dailyTotalQuestions = 5
     private var isLimitAlertShown = false
     private var currentIndex = 0
 
@@ -35,11 +41,11 @@ class SoundMatchActivity : AppCompatActivity() {
         binding = ActivitySoundMatchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val subject = "Sound"
+        val subject = "soundfun"
         reFreshDailyCount(this, subject)
 
         val repo = LocalQuestionRepository(this, "sound_questions.json")
-        vm.initIfNeeded(repo, Subjects = "Sound")
+        vm.initIfNeeded(repo, Subjects = "soundfun")
         setUpListener()
 
         lifecycleScope.launchWhenStarted {
@@ -137,7 +143,7 @@ class SoundMatchActivity : AppCompatActivity() {
         if (isCorrect && wasUnderLimit) {
             currentIndex++
             lifecycleScope.launchWhenStarted {
-                incrementQuestionCount(this@SoundMatchActivity, "Sound")
+                incrementQuestionCount(this@SoundMatchActivity, "soundfun")
             }
 
         }
@@ -152,7 +158,10 @@ class SoundMatchActivity : AppCompatActivity() {
                     Congrats.showCongratsAlert(
                         context = this,
                         onClaimClick = {
-                            if (isCorrect) scoreVM.addScore(+1) // coins only under limit
+                            if (isCorrect) {
+                                scoreVM.addScore(+1)
+                                saveUserDataToServer()
+                            } // coins only under limit
                             binding.currentQue.text = "${currentIndex} / $dailyTotalQuestions"
                             hideHint()
 
@@ -190,6 +199,68 @@ class SoundMatchActivity : AppCompatActivity() {
                 }
             )
         }
+
+    }
+
+    private fun saveUserDataToServer() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        if(currentUser == null){
+            Log.d("Tag", "User not authorized ")
+            return
+        }
+
+        val json = JSONObject().apply {
+            put("uid", currentUser.uid)
+            put("name", currentUser.displayName ?: "Unknown")
+            put("email", currentUser.email ?: "")
+            put("device_id", android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID))
+            put("coins", 1) // Send +1 coin increment
+            put("subject", "soundfun") // THIS IS KEY - specify the subject
+            put("daily_limits", currentIndex) // Current progress for Math
+            // Remove idToken and dailyLimits - not needed
+        }
+        Log.d("Tag", "sending math data: $json")
+
+        val body = RequestBody.create(
+            "application/json".toMediaTypeOrNull(),
+            json.toString()
+        )
+        RetrofitBuilder.api.SaveUserData(body).enqueue(object : retrofit2.Callback<ResponseBody> {
+            override fun onResponse(call: retrofit2.Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
+                try {
+                    if (response.isSuccessful) {
+                        val responseString = response.body()?.string() ?: ""
+                        Log.d("Tag", "Sound data saved: $responseString")
+
+                        if (responseString.isNotEmpty()) {
+                            val responseJson = JSONObject(responseString)
+                            val success = responseJson.getBoolean("success")
+
+                            if (success) {
+                                val userData = responseJson.getJSONObject("user")
+                                val totalCoins = userData.getInt("coins")
+                                val soundLimit = userData.getInt("daily_limits")
+
+                                Log.d("SERVER_SUCCESS", "Total Coins: $totalCoins, Math Progress: $soundLimit")
+                            } else {
+                                val message = responseJson.getString("message")
+                                Log.e("SERVER_ERROR", "Save failed: $message")
+                            }
+                        }
+                    } else {
+                        val errorString = response.errorBody()?.string() ?: "Unknown error"
+                        Log.e("SERVER_ERROR", "HTTP Error ${response.code()}: $errorString")
+                    }
+                } catch (e: Exception) {
+                    Log.e("SERVER_ERROR", "Exception: ${e.message}")
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
+                Log.e("SERVER_ERROR", "Network failure: ${t.message}")
+            }
+        })
 
     }
 

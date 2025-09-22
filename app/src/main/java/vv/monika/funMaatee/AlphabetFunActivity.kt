@@ -266,9 +266,9 @@ class AlphabetFunActivity : AppCompatActivity() {
             Log.e("API_ERROR", "User not authenticated")
             return
         }
-
-        scoreVM.addScore(+1) // Add score first
-        val coins = 1
+//
+//        scoreVM.addScore(+1) // Add score first
+//        val coins = 1
 
 
         // Create simplified JSON - no token needed since you're already authenticated

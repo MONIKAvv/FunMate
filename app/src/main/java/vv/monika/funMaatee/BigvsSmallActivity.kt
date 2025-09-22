@@ -1,12 +1,20 @@
 package vv.monika.funMaatee
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.first
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Response
 import vv.monika.funMaatee.data.BigVsSmallQuestion
 import vv.monika.funMaatee.databinding.ActivityBigvsSmallBinding
 import vv.monika.funMaatee.model.ScoreViewModel
@@ -36,7 +44,7 @@ class BigvsSmallActivity : AppCompatActivity() {
         binding = ActivityBigvsSmallBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val subject = "BigVsSmall"
+        val subject = "bigvssmall"
         reFreshDailyCount(this, subject)
 
         setUpListeners()
@@ -68,8 +76,6 @@ class BigvsSmallActivity : AppCompatActivity() {
     // ---------- Flow ----------
     private fun loadNextQuestion() {
         hideHint() // always reset hint
-
-
         currentQuestion = generateQuestion()
         renderQuestion(currentQuestion)
 
@@ -211,7 +217,10 @@ class BigvsSmallActivity : AppCompatActivity() {
                     Congrats.showCongratsAlert(
                         context = this,
                         onClaimClick = {
-                            if (isCorrect) scoreVM.addScore(+1) // coins only under limit
+                            if (isCorrect) {
+                                scoreVM.addScore(+1)
+                                saveUserDataToServer()
+                            } // coins only under limit
                             binding.currentQue.text = "${currentIndex} / $totalQuestions"
                             hideHint()
 
@@ -248,6 +257,66 @@ class BigvsSmallActivity : AppCompatActivity() {
                 }
             )
         }
+
+    }
+
+    private fun saveUserDataToServer() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        if(currentUser == null){
+            Log.d("Tag", "User not authorized")
+            return
+
+        }
+
+        val json = JSONObject().apply {
+            put("uid", currentUser.uid)
+            put("name", currentUser.displayName ?: "Unknown")
+            put("email", currentUser.email ?: "")
+            put("device_id", android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID))
+
+            put("coins", 1)
+            put("subject", "bigvssmall")
+            put("daily_limits", currentIndex)
+
+        }
+
+        Log.d("Tag", "Sending math data: $json")
+        val body = RequestBody.create(
+            "application/json".toMediaTypeOrNull(),
+            json.toString()
+        )
+        RetrofitBuilder.api.SaveUserData(body).enqueue(object :retrofit2.Callback<ResponseBody>{
+            override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
+                try {
+                    if (response.isSuccessful){
+                        val responseString = response.body()?.string() ?: ""
+
+                        if(responseString.isNotEmpty()){
+                            val responseJson = JSONObject(responseString)
+                            val success = responseJson.getBoolean("success")
+
+                            if(success){
+                                val userData = responseJson.getJSONObject("user")
+                                val totalCoins = userData.getInt("coins")
+                                val bigvssmallLimit = userData.getInt("daily_limits")
+                            }else{
+                                val message = responseJson.getString("message")
+
+                            }
+                        }
+                    }else{
+                        val errorString = response.errorBody()?.string() ?: "Unknown error"
+                    }
+                }catch (e : Exception){
+                    Log.d("Tag", "Error : ${e.message}")
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+                Log.e("Tag", "Network failure: ${t.message}")
+            }
+        })
 
     }
 

@@ -8,7 +8,7 @@ import vv.monika.funMaatee.retrofit_interface.ApiServiceInterface
 import java.util.concurrent.TimeUnit
 
 object RetrofitBuilder {
-    private const val BASE_URL = "https://base-cherry-den-rica.trycloudflare.com/myapi/"  // 👈 yaha sirf base url
+    private const val BASE_URL = "https://introduced-attended-liabilities-jul.trycloudflare.com/myapi/"  // 👈 yaha sirf base url
 
     private val retrofit: Retrofit by lazy {
         val logging = HttpLoggingInterceptor().apply {
