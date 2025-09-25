@@ -31,7 +31,7 @@
         app:srcCompat="@drawable/curve_underline" />
 
     <EditText
-        android:id="@+id/editTextText3"
+        android:id="@+id/promocode_edittext"
         android:layout_width="358dp"
         android:layout_height="59dp"
         android:layout_marginTop="16dp"
@@ -47,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView9" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/apply_promocode_btn"
         android:layout_width="192dp"
         android:layout_height="55dp"
         android:layout_marginTop="32dp"
@@ -55,13 +55,13 @@
         android:fontFamily="@font/poppins_semibold"
         android:text="Apply"
         android:textAllCaps="false"
-        app:layout_constraintEnd_toEndOf="@+id/editTextText3"
-        app:layout_constraintStart_toStartOf="@+id/editTextText3"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
+        app:layout_constraintEnd_toEndOf="@+id/promocode_edittext"
+        app:layout_constraintStart_toStartOf="@+id/promocode_edittext"
+        app:layout_constraintTop_toBottomOf="@+id/promocode_edittext" />
 
     <Button
 
-        android:id="@+id/button6"
+        android:id="@+id/join_telegram"
         android:layout_width="192dp"
         android:layout_height="55dp"
         android:layout_marginTop="32dp"
@@ -72,7 +72,7 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button5" />
+        app:layout_constraintTop_toBottomOf="@+id/apply_promocode_btn" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -84,8 +84,8 @@
 
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/button6"
-        app:layout_constraintStart_toStartOf="@+id/button6" />
+        app:layout_constraintEnd_toEndOf="@+id/join_telegram"
+        app:layout_constraintStart_toStartOf="@+id/join_telegram" />
 
 
     <ImageView
